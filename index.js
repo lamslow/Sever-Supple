@@ -1,21 +1,23 @@
-let express=require('express');
-let hbs=require('express-handlebars');
+let express = require('express');
+let hbs = require('express-handlebars');
 let db = require('mongoose');
 let userSchema = require('./model/userSchema');
 let productSchema = require('./model/productSchema');
 let AdministratorSchema = require('./model/AdministratorSchema');
-let cartSchema=require('./model/cartSchema');
+let cartSchema = require('./model/cartSchema');
+let coachSchema = require('./model/coachSchema');
 let User = db.model('User', userSchema, 'users');
 let Product = db.model('Product', productSchema, 'products');
-let Administrator=db.model('Administrator',AdministratorSchema,'administrator');
-let Cart=db.model("Cart",cartSchema,'cart');
-let body=require('body-parser');
-let multer=require('multer')
+let Administrator = db.model('Administrator', AdministratorSchema, 'administrator');
+let Cart = db.model("Cart", cartSchema, 'cart');
+let Coach = db.model("Coach", coachSchema, 'coach');
+let body = require('body-parser');
+let multer = require('multer')
 db.connect('mongodb+srv://lamntph07140:123456ab@cluster0-kylu8.gcp.mongodb.net/databaseAss', {}).then(function (res) {
     console.log('conected');
 })
 
-let app=express();
+let app = express();
 let multerConfig = multer.diskStorage({
     destination: function (req, file, cb) {
 
@@ -26,8 +28,8 @@ let multerConfig = multer.diskStorage({
         //chỉ cho phép tải lên các loại ảnh jpeg & jpg
 
         //thông báo lỗi khi upload file không hợp lệ
-            //thiết lập tên file
-            cb(null, file.originalname)
+        //thiết lập tên file
+        cb(null, file.originalname)
 
 
     }
@@ -40,28 +42,24 @@ let upload = multer({
     }
 })
 let file = upload.single('exImage')
-app.post('/upload',function (req, res) {
-    file(req, res,function (err) {
+app.post('/upload', function (req, res) {
+    file(req, res, function (err) {
 
 
-        if (err){
-            if (req.files.length >=5) {
-                res.render("upsanpham", {data:"Số lượng file không được lớn hơn 5"});
-            }
+        if (err) {
+            if (req.files.length >= 5) {
+                res.render("upsanpham", {data: "Số lượng file không được lớn hơn 5"});
+            } else if (err instanceof multer.MulterError) {
+                res.render("upsanpham", {data: "Giới hạn 2MB"});
+            } else {
 
-            else if (err instanceof multer.MulterError){
-                res.render("upsanpham", {data:"Giới hạn 2MB"});
-            }
-
-            else {
-
-                res.render("upsanpham", {data:err});
+                res.render("upsanpham", {data: err});
 
             }
 
 
-        }else {
-            res.render("upsanpham", {data:'Upload ảnh thành công. Kiểm tra thư mục uploads'});
+        } else {
+            res.render("upsanpham", {data: 'Upload ảnh thành công. Kiểm tra thư mục uploads'});
 
         }
     })
@@ -69,16 +67,16 @@ app.post('/upload',function (req, res) {
 let path = require('path');
 app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use(body.json());
-app.use(body.urlencoded({extended:true}));
-app.engine('.hbs',hbs({
+app.use(body.urlencoded({extended: true}));
+app.engine('.hbs', hbs({
     extname: 'hbs',
     defaultLayout: '',
-    layoutsDir:''
+    layoutsDir: ''
 }));
 
-app.set('view engine','.hbs');
+app.set('view engine', '.hbs');
 app.listen(1212);
-app.get('/',function (request,response) {
+app.get('/', function (request, response) {
 
     response.render("login");
 });
@@ -235,8 +233,8 @@ app.get('/delAdmin', async function (request, response) {
 
 app.get('/sanpham', async function (request, response) {
 
-        let products = await Product.find({}).lean();
-        response.render('sanpham', {data: products});
+    let products = await Product.find({}).lean();
+    response.render('sanpham', {data: products});
 });//done
 
 app.get('/qlysanpham', async function (request, response) {
@@ -245,30 +243,28 @@ app.get('/qlysanpham', async function (request, response) {
 });
 
 
-
 app.get('/upsanpham', async function (request, response) {
-        response.render('upsanpham', {status: 'none'});
+    response.render('upsanpham', {status: 'none'});
 
 });
 
+app.post('/uploadProduct', (request, response) => {
 
-app.post('/uploadProduct',  (request, response) => {
+    file(request, response, async function (err) {
+        if (err) {
+            // kiem tra loi co phai la max file ko
+            if (err instanceof multer.MulterError) {
+                response.send('kích thước file lớn hơn 2mb' + response)
+            } else {
+                response.send('' + err)
+            }
 
-    file(request, response,async function (err) {
-        if (err){
-                // kiem tra loi co phai la max file ko
-                if (err instanceof multer.MulterError) {
-                    response.send('kích thước file lớn hơn 2mb' + response)
-                } else {
-                    response.send('' + err)
-                }
-
-        }else {
+        } else {
             let nameSP = request.body.nameSP;
             let priceSP = request.body.priceSP;
             let descriptionSP = request.body.descriptionSP;
             let slSP = request.body.slSP;
-            let classify= request.body.classifySP;
+            let classify = request.body.classifySP;
             let image = request.file.filename;
             let products = await Product.find({
                 ProductName: nameSP,
@@ -295,7 +291,7 @@ app.post('/uploadProduct',  (request, response) => {
                     response.render('upsanpham', {status: 'block', data: 'Thêm sản phẩm ' + nameSP + ' thất bại.'});
 
                 }
-            }else {
+            } else {
                 response.render('upsanpham', {
                     status: 'block',
                     data: 'Thêm sản phẩm ' + nameSP + ' thất bại. Sản phẩm đã tồn tại.'
@@ -321,7 +317,7 @@ app.get('/updatesanpham', async function (request, response) {
         let nameSP = request.query.nameSP;
         let priceSP = request.query.priceSP;
         let descriptionSP = request.query.descriptionSP;
-        let classifySP= request.query.classifySP;
+        let classifySP = request.query.classifySP;
         let slSP = request.query.slSP;
 
         response.render('updatesanpham', {
@@ -334,7 +330,7 @@ app.get('/updatesanpham', async function (request, response) {
             nameSP: nameSP,
             priceSP: priceSP,
             descriptionSP: descriptionSP,
-            classifySP:classifySP,
+            classifySP: classifySP,
             slSP: slSP,
         });
     }
@@ -347,14 +343,14 @@ app.get('/updateSPdone', async function (request, response) {
     let priceSP = request.query.priceSP;
     let exImage = request.query.exImage;
     let descriptionSP = request.query.descriptionSP;
-    let classifySP= request.query.classifySP;
+    let classifySP = request.query.classifySP;
     let slSP = request.query.slSP;
     let products = await Product.find({
         ProductName: nameSP,
         Price: priceSP,
         Description: descriptionSP,
         Quantity: slSP,
-        Classify:classifySP,
+        Classify: classifySP,
         ImageProduct: exImage
     }).lean();   //dk
     if (products.length <= 0) {
@@ -364,7 +360,7 @@ app.get('/updateSPdone', async function (request, response) {
             Price: priceSP,
             Description: descriptionSP,
             Quantity: slSP,
-            Classify:classifySP,
+            Classify: classifySP,
             ImageProduct: exImage
         });
         let nProduct = await Product.find({}).lean();
@@ -415,7 +411,7 @@ app.get('/delsanpham', async function (request, response) {
 
 app.get('/qlykhachhang', async function (request, response) {
     let users = await User.find({}).lean();
-        response.render('quanlykhachhang', {data: users, status: 'none'});
+    response.render('quanlykhachhang', {data: users, status: 'none'});
 
 });
 app.post('/createkhachhang', async function (request, response) {
@@ -501,8 +497,7 @@ app.post('/signUpkhachhang', async function (request, response) {
     }
 
 });
-app.post('/updateKH', async function (request, response)
-{
+app.post('/updateKH', async function (request, response) {
 
     let idKH = request.body.nIdKH;
     let userKH = request.body.nUserKH;
@@ -512,8 +507,10 @@ app.post('/updateKH', async function (request, response)
     let AddressKH = request.body.nAddress;
     let EmailKH = request.body.nEmail;
 
-    let users = await User.find({Username: userKH, Password: passKH,Fullname: FullnameKH
-        ,Phone: PhoneKH, Email: EmailKH, Address: AddressKH}).lean();   //dk
+    let users = await User.find({
+        Username: userKH, Password: passKH, Fullname: FullnameKH
+        , Phone: PhoneKH, Email: EmailKH, Address: AddressKH
+    }).lean();   //dk
     if (users.length <= 0) {
         console.log(idKH + " edit kh");
         let status = await User.findByIdAndUpdate(idKH, {
@@ -570,29 +567,44 @@ app.get('/delKH', async function (request, response) {
 });
 
 
+app.get('/listcoach', async function (request, response) {
+
+    let coach = await Coach.find({}).lean();
+    response.render('listCoach', {data: coach});
+});//done
+
+app.get('/detailCoach', async function (request, response) {
+    let idCoach = request.query.idCoach;
+    let coach = await Coach.find({_id: idCoach}).lean();
+    response.render('detailCoach', {data: coach});
+});//done
+
 
 // api for App
-let userOnline="";
+let userOnline = "";
 
 app.get('/getUser', async function (request, response) {
-    let username=request.query.Username;
-    let users = await User.find({Username:username}).lean();
+    let username = request.query.Username;
+    let users = await User.find({Username: username}).lean();
     response.send(users);
 });
-app.get('/quantityUser',async function (request,response){
+app.get('/quantityUser', async function (request, response) {
     let users = await User.find({}).lean();
-    response.send(users.length+"")
+    response.send(users.length + "")
 })
-app.get('/loginApp',    async function (request, response) {
+app.get('/loginApp', async function (request, response) {
     let userLogin = request.query.Username;
     let passwordLogin = request.query.Password;
-    let stt=await Administrator.find({userAdmin:userLogin,passwordAdmin:passwordLogin}).lean();
-    if (stt.length>0){
+    let stt = await Administrator.find({userAdmin: userLogin, passwordAdmin: passwordLogin}).lean();
+    let stt2 = await Coach.find({Username: userLogin, Password: passwordLogin}).lean();
+    if (stt.length > 0) {
         response.send("Admin")
-    }else {
+    } else if (stt2.length > 0) {
+        response.send("Coach")
+    } else {
         let status = await User.find({Username: userLogin, Password: passwordLogin}).lean();   //dk
-        if (status.length >0) {
-            userOnline=userLogin;
+        if (status.length > 0) {
+            userOnline = userLogin;
             response.send("Success");
         } else {
             response.send('Fail');
@@ -601,7 +613,7 @@ app.get('/loginApp',    async function (request, response) {
 
 });
 app.get('/GetInforUser', async function (request, response) {
-    let infor=await User.find({Username:userOnline}).lean();
+    let infor = await User.find({Username: userOnline}).lean();
     response.send(infor);
 });
 
@@ -613,84 +625,83 @@ app.post('/signUpUser', async function (request, response) {
     let nPhone = request.body.Phone;
     let nEmail = request.body.Email;
     let nAddress = request.body.Address;
-        let users = await User.find({Username: nUser}).lean();   //dk
-        if (users.length <= 0) {
-            let stt=await User.find({Phone:nPhone,Email:nEmail}).lean();
-            console.log(stt)
-            if (stt.length>0){
-                response.send("Email hoặc Số điện thoại đã được sử dụng");
-            }else {
-                let newUser = new User({
-                    Username: nUser,
-                    Password: nPass,
-                    Fullname: nFullname,
-                    Phone: nPhone,
-                    Email: nEmail,
-                    Address: nAddress,
-                });
-                console.log("1")
-                let status = await newUser.save();
-                if (status) {
-                    console.log("aa")
-                    response.send( "Create Account Success");
-                } else {
-                    console.log(status)
-                    response.send("Create Account Failure");
-                }
-            }
-
+    let users = await User.find({Username: nUser}).lean();   //dk
+    if (users.length <= 0) {
+        let stt = await User.find({Phone: nPhone, Email: nEmail}).lean();
+        console.log(stt)
+        if (stt.length > 0) {
+            response.send("Email hoặc Số điện thoại đã được sử dụng");
         } else {
-            console.log(users)
-            response.send("Account already exists");
+            let newUser = new User({
+                Username: nUser,
+                Password: nPass,
+                Fullname: nFullname,
+                Phone: nPhone,
+                Email: nEmail,
+                Address: nAddress,
+            });
+            console.log("1")
+            let status = await newUser.save();
+            if (status) {
+                console.log("aa")
+                response.send("Create Account Success");
+            } else {
+                console.log(status)
+                response.send("Create Account Failure");
+            }
         }
 
+    } else {
+        console.log(users)
+        response.send("Account already exists");
+    }
 
 
 });
 
-app.post('/resetPass', async function (request,response){
-    let id=request.body._id;
-    let nUser=request.body.Username;
-    let nPass=request.body.Password;
+app.post('/resetPass', async function (request, response) {
+    let id = request.body._id;
+    let nUser = request.body.Username;
+    let nPass = request.body.Password;
     let nPhone = request.body.Phone;
     let nEmail = request.body.Email;
-    console.log(id+"");
-    let status=await User.find({Username:nUser,Phone:nPhone,Email:nEmail}).lean();
-    if(status.length>0){
-        let stt=await User.findByIdAndUpdate(id,{Password:nPass});
-        if (stt){
+    console.log(id + "");
+    let status = await User.find({Username: nUser, Phone: nPhone, Email: nEmail}).lean();
+    if (status.length > 0) {
+        let stt = await User.findByIdAndUpdate(id, {Password: nPass});
+        if (stt) {
             response.send("Reset Success")
-        }else {
+        } else {
             response.send("Reset Fail")
         }
-           //response.send("Correctly")
-    }else {
+        //response.send("Correctly")
+    } else {
         response.send("Incorrectly")
     }
 });
 
-app.post('/changePass', async function (request,response){
-    let id=request.body._id;
-    let nUser=request.body.Username;
-    let nPass=request.body.Password;
-    console.log(id+"");
-    let status=await User.find({Username:nUser,Password:nPass}).lean();
+app.post('/changePass', async function (request, response) {
+    let id = request.body._id;
+    let nUser = request.body.Username;
+    let nPass = request.body.Password;
+    console.log(id + "");
+    let status = await User.find({Username: nUser, Password: nPass}).lean();
     console.log(status);
-    if(status.length<=0){
-        let stt=await User.findByIdAndUpdate(id,{Password:nPass});
-        if (stt){
+    if (status.length <= 0) {
+        let stt = await User.findByIdAndUpdate(id, {Password: nPass});
+        if (stt) {
             response.send("Change Success")
-        }else {
+        } else {
             response.send("Change Fail")
         }
         //response.send("Correctly")
-    }else {
+    } else {
         response.send("Duplicate")
     }
 });
 
 
-app.post('/updateProfile',async function (request,response){
+app.post('/updateProfile', async function (request, response) {
 
     let idKH = request.body.nIdKH;
     let FullnameKH = request.body.Fullname;
@@ -698,62 +709,58 @@ app.post('/updateProfile',async function (request,response){
     let AddressKH = request.body.Address;
     let EmailKH = request.body.Email;
     console.log(idKH)
-    let users = await User.find({Fullname: FullnameKH,Phone: PhoneKH, Email: EmailKH, Address: AddressKH}).lean();
+    let users = await User.find({Fullname: FullnameKH, Phone: PhoneKH, Email: EmailKH, Address: AddressKH}).lean();
     console.log(users)
-    if (users.length<=0){
-        let newUser=await User.findByIdAndUpdate(idKH,{
+    if (users.length <= 0) {
+        let newUser = await User.findByIdAndUpdate(idKH, {
             Fullname: FullnameKH,
             Phone: PhoneKH,
             Address: AddressKH,
             Email: EmailKH
         });
         console.log(newUser)
-        if (newUser){
+        if (newUser) {
             response.send('Update User Success')
-        }else {
+        } else {
             response.send('Update User Failure')
         }
-    }else {
+    } else {
         response.send('User already exists')
     }
 });
 
-
-
 app.get('/myProduct', async function (request, response) {
-    let classify=request.query.Classify;
-    let products = await Product.find({Classify:classify}).lean();
+    let classify = request.query.Classify;
+    let products = await Product.find({Classify: classify}).lean();
     response.send(products);
 });
 
-app.get('/getCart', async function (request,response){
-    let cart=await Cart.find({}).lean();
+app.get('/getCart', async function (request, response) {
+    let cart = await Cart.find({}).lean();
     response.send(cart);
 });
 
-app.post('/upCart',async function (request,response){
-    let username=request.body.Username;
-    // let name=request.body.Name;
-    let cart=request.body.Cart;
+app.post('/upCart', async function (request, response) {
+    let username = request.body.Username;
+    let cart = request.body.Cart;
     console.log(cart);
-    // let quantity=request.body.Quantity;
-    // let price=request.body.Price;
-    let dateCart=request.body.DateCart;
-    let recipients=request.body.Recipients;
-    let receivingAddress=request.body.ReceivingAddress;
-
-    let newCart=new Cart({
-        Username:username,
-        Cart:cart,
-        Recipients:recipients,
-        ReceivingAddress:receivingAddress,
-        DateCart:dateCart
+    let dateCart = request.body.DateCart;
+    let recipients = request.body.Recipients;
+    let receivingAddress = request.body.ReceivingAddress;
+    let totalPrice = request.body.TotalPrice;
+    let newCart = new Cart({
+        Username: username,
+        Cart: cart,
+        Recipients: recipients,
+        ReceivingAddress: receivingAddress,
+        DateCart: dateCart,
+        TotalPrice: totalPrice,
     });
-    let status=newCart.save();
-    if (status){
+    let status = newCart.save();
+    if (status) {
         response.send("Up Cart Success")
-    }else {
+    } else {
         response.send("Up Cart Failure")
     }
-    
+
 })

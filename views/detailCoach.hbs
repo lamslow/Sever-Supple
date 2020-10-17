@@ -28,8 +28,8 @@
                     </button>
                     <form action="sanpham" method="get">
                         <div class="dropdown-menu dropdown-menu-lg-right">
-                            <button class="dropdown-item"  type="submit">GYM</button>
-                            <button class="dropdown-item" type="submit">Aerobic</button>
+                            <button class="dropdown-item" type="submit">GYM</button>
+                            <button class="dropdown-item" type="submit">Exercise</button>
                             <button class="dropdown-item" type="submit">Yoga</button>
                         </div>
                     </form>
@@ -63,31 +63,35 @@
 <div class=" rounded-bottom bg-light ">
     <br> <br>
     <div class=" container col-10">
-        <div class="row row-cols-1 row-cols-md-3">
-
-
-            {{#each data}}
-                <div class="col mb-4">
-                    <div class="card">
-                        <img src="../public/{{this.ImageProduct}}" class="card-img-top" width="100px" height="200px"
-                             alt='../public/{{this.ImageProduct}}'>
-                        <div class="card-body">
-                            <h5 class="card-title">{{this.ProductName}}</h5>
-                            <p class="card-text">Mô tả:  {{this.Description}}</p>
-                            <p class="card-text">Loại sản phẩm:  {{this.Classify}}</p>
-
-                            <div class="card-footer">
-                                <p class="">Giá:  {{this.Price}} VNĐ</p>
-                                <a class="btn btn-primary col-12">Số lượng: {{this.Quantity}}</a>
-                            </div>
-                        </div>
-                    </div>
+    <div class="">
+        {{#each data}}
+            <div class="col mb-4">
+                <div class="text-center">
+                <img src="../public/{{this.ImageProfile}}" class="img-thumbnail align-content-center" width="300px"
+                     height="300px"
+                     alt='../public/{{this.ImageProfile}}'>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center">{{this.CoachName}} - {{this.Age}} tuổi</h5>
+                <p class="card-text text-center">Chuyên ngành: {{this.Specialized}}</p>
+                <div class="card-footer">
+                    <h5>Mô tả</h5>
+                    <p>{{this.Background}}</p>
+                    <h5>Nơi làm việc</h5>
+                    <p>{{this.Workplace}}</p>
                 </div>
-            {{/each}}
+                <br>
+                <div class="card-footer">
+                    <h5>Liên hệ</h5>
+                    <p>Số điện thoại: {{this.Phone}}</p>
+                    <p>Email: {{this.Email}}</p>
+                </div>
+            </div>
         </div>
+        {{/each}}
     </div>
 </div>
-
+</div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

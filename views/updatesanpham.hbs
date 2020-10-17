@@ -19,8 +19,20 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/sanpham">Sản phẩm </a>
+            <li class="nav-item active mr-1">
+                <div class="btn-group">
+                    <button class="btn btn-outline-success dropdown-toggle" data-display="static" type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">Products
+                    </button>
+                    <form action="sanpham" method="get">
+                        <div class="dropdown-menu dropdown-menu-lg-right">
+                            <button class="dropdown-item"  type="submit">GYM</button>
+                            <button class="dropdown-item" type="submit">Aerobic</button>
+                            <button class="dropdown-item" type="submit">Yoga</button>
+                        </div>
+                    </form>
+                </div>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="/qlysanpham">Quản lý sản phẩm</a>

@@ -19,24 +19,35 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/sanpham">Products </a>
+            <li class="nav-item active mr-1">
+                <div class="btn-group">
+                    <button class="btn btn-outline-success dropdown-toggle" data-display="static" type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">Products
+                    </button>
+                    <form action="sanpham" method="get">
+                        <div class="dropdown-menu dropdown-menu-lg-right">
+                            <button class="dropdown-item"  type="submit">GYM</button>
+                            <button class="dropdown-item" type="submit">Aerobic</button>
+                            <button class="dropdown-item" type="submit">Yoga</button>
+                        </div>
+                    </form>
+                </div>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/qlysanpham">Products Management</a>
+            <li class="nav-item active mr-1">
+                <a class="btn btn-outline-success" href="/qlysanpham">Products Management</a>
             </li>
-
-            <li class="nav-item active">
-                <a class="nav-link " href="/upsanpham" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    Upload Products
+            <li class="nav-item active  mr-1">
+                <a class="btn btn-outline-success" href="/listcoach" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Coach Management
                 </a>
 
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/qlykhachhang">Customer Management</a>
+            <li class="nav-item active mr-1">
+                <a class="btn btn-outline-success" href="/qlykhachhang">Customer Management</a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link " href="/listAdmin" tabindex="-1" aria-disabled="true">Administrator Management</a>
+            <li class="nav-item active mr-1">
+                <a class="btn btn-outline-success" href="/listAdmin" tabindex="-1" aria-disabled="true">Administrator Management</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -46,6 +57,13 @@
     </div>
 </nav>
 
+<form action="upsanpham" method="get">
+    <div class="container">
+        <div class="row justify-content-md-center row-cols-4">
+            <button type="submit" class=" btn btn-success">Thêm Sản Phẩm</button>
+        </div>
+    </div>
+</form>
 <div class="container rounded-bottom bg-light ">
     <br> <br>
     <table class="table container col-10">
