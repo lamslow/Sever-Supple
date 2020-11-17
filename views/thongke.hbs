@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+    <title>Product</title>
+</head>
+<body>
+
+
+<div class="">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" methods="get" href="sanpham">Trang chủ</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active mr-1">
+                    <div class="btn-group">
+                        <button class="btn btn-outline-success dropdown-toggle" data-display="static" type="button"
+                                data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">Products
+                        </button>
+                        <form action="sanpham" method="get">
+                            <div class="dropdown-menu dropdown-menu-lg-right">
+                                <button class="dropdown-item" value="supply" name="sm" type="submit">Thực phẩm hỗ trợ</button>
+                                <button class="dropdown-item" value="equipment" name="sm" type="submit">Dụng cụ tập luyện</button>
+                                <button class="dropdown-item" value="clothes" name="sm" type="submit">Quần áo tập luyện</button>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+                <li class="nav-item active mr-1">
+                    <a class="btn btn-outline-success" href="/qlysanpham">Products Management</a>
+                </li>
+                <li class="nav-item active  mr-1">
+                    <a class="btn btn-outline-success" href="/listcoach" id="navbarDropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">
+                        Coach
+                    </a>
+
+                </li>
+                <li class="nav-item active mr-1">
+                    <a class="btn btn-outline-success" href="/qlykhachhang">Customer Management</a>
+                </li>
+                <li class="nav-item active mr-1">
+                    <a class="btn btn-outline-success" href="/listAdmin" tabindex="-1" aria-disabled="true">Administrator
+                        Management</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="list-group">
+                <a href="/quantriHLV" class="list-group-item list-group-item-action">
+                    Quản trị HLV
+                </a>
+                <a href="/thongke" class="list-group-item list-group-item-action">
+                    Thống kê
+                </a>
+            </div>
+        </div>
+        <div class="col-sm-10 bg-light" style="padding-right:50px">
+            <table class="table table-bordered table-info">
+                <thead class="thead-dark ">
+                <tr>
+                    <th scope="col" class="text-center">Thống kê</th>
+                    <th scope="col" class="text-center">HLV</th>
+                    <th scope="col" class="text-center">Sản phẩm</th>
+                    <th scope="col" class="text-center">Khách hàng</th>
+                    <th scope="col" class="text-center">Đơn hàng</th>
+                </tr>
+                </thead>
+                <tr>
+                    <th scope="row">Số lượng</th>
+                    <td>{{allCoach}}</td>
+                    <td>{{allProduct}}</td>
+                    <td>{{allUser}}</td>
+                    <td>{{allCart}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Số lượng</th>
+                    <td>{{allProduct}}</td>
+                    <td>{{allUser}}</td>
+                    <td>{{allCart}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+</html>

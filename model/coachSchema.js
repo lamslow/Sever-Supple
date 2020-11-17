@@ -6,10 +6,12 @@ const CoachSchema = mongoose.Schema({
     Phone: {type: String},
     ImageProfile:{type:String},
     Email: {type: String},
+    Address: {type: String},
     Workplace: {type: String},
     Background:{type:String},
     Age:{type:Number},
-    Specialized:{type:String}
+    Specialized:{type:Array},
+    Rating:{type:Number}
 
 });
 module.exports = CoachSchema;

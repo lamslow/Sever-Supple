@@ -28,9 +28,9 @@
                     </button>
                     <form action="sanpham" method="get">
                         <div class="dropdown-menu dropdown-menu-lg-right">
-                            <button class="dropdown-item" type="submit">GYM</button>
-                            <button class="dropdown-item" type="submit">Exercise</button>
-                            <button class="dropdown-item" type="submit">Yoga</button>
+                            <button class="dropdown-item" value="supply" name="sm" type="submit">Thực phẩm hỗ trợ</button>
+                            <button class="dropdown-item" value="equipment" name="sm" type="submit">Dụng cụ tập luyện</button>
+                            <button class="dropdown-item" value="clothes" name="sm" type="submit">Quần áo tập luyện</button>
                         </div>
                     </form>
                 </div>
@@ -41,7 +41,7 @@
             <li class="nav-item active  mr-1">
                 <a class="btn btn-outline-success" href="/listcoach" id="navbarDropdown" role="button"
                    aria-haspopup="true" aria-expanded="false">
-                    Coach Management
+                    Coach
                 </a>
 
             </li>
@@ -63,34 +63,41 @@
 <div class=" rounded-bottom bg-light ">
     <br> <br>
     <div class=" container col-10">
-    <div class="">
-        {{#each data}}
-            <div class="col mb-4">
-                <div class="text-center">
-                <img src="../public/{{this.ImageProfile}}" class="img-thumbnail align-content-center" width="300px"
-                     height="300px"
-                     alt='../public/{{this.ImageProfile}}'>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title text-center">{{this.CoachName}} - {{this.Age}} tuổi</h5>
-                <p class="card-text text-center">Chuyên ngành: {{this.Specialized}}</p>
-                <div class="card-footer">
-                    <h5>Mô tả</h5>
-                    <p>{{this.Background}}</p>
-                    <h5>Nơi làm việc</h5>
-                    <p>{{this.Workplace}}</p>
+            {{#each data}}
+                <div class="col mb-4">
+                    <div class="text-center">
+                        <img src="../public/{{this.ImageProfile}}" class="img-thumbnail align-content-center"
+                             width="300px"
+                             height="300px"
+                             alt='../public/{{this.ImageProfile}}'>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">{{this.CoachName}} - {{this.Age}} tuổi</h5>
+                        <p class="card-text text-center">Chuyên ngành: {{this.Specialized}}</p>
+                        <div class="card-footer">
+                            <h5>Mô tả</h5>
+                            <p>{{this.Background}}</p>
+                            <h5>Nơi làm việc</h5>
+                            <p>{{this.Workplace}}</p>
+                        </div>
+                        <br>
+                        <div class="card-footer" style="display: {{style1}}">
+                            <h5>Liên hệ</h5>
+                            <p>Số điện thoại: {{this.Phone}}</p>
+                            <p>Email: {{this.Email}}</p>
+                        </div>
+                    </div>
                 </div>
-                <br>
-                <div class="card-footer">
-                    <h5>Liên hệ</h5>
-                    <p>Số điện thoại: {{this.Phone}}</p>
-                    <p>Email: {{this.Email}}</p>
-                </div>
-            </div>
-        </div>
-        {{/each}}
+            {{/each}}
     </div>
 </div>
+
+<div class="text-center" style="display: {{style2}}">
+    <form method="post" action="confirmCoach">
+        <button class="btn btn-outline-success" type="submit" value="Confirm" name="sm">Đồng ý</button>
+        <button class="btn btn-outline-success" type="submit" value="Cancel" name="sm">Hủy</button>
+    </form>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
