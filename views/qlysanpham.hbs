@@ -71,7 +71,6 @@
             <th scope="col">_id</th>
             <th scope="col">Tên sản phẩm</th>
             <th scope="col">Giá</th>
-            <th scope="col">Mô tả</th>
             <th scope="col">Ảnh</th>
             <th scope="col">Loại SP</th>
             <th scope="col">Số lượng</th>
@@ -84,7 +83,6 @@
                 <th scope="row">{{this._id}}</th>
                 <td>{{this.ProductName}}</td>
                 <td>{{this.Price}}</td>
-                <td>{{this.Description}}</td>
                 <td>{{this.ImageProduct}}</td>
                 <td>{{this.Classify}}</td>
                 <td>{{this.Quantity}}</td>
@@ -99,6 +97,7 @@
                             <input type="text" name="descriptionSP" value="{{this.Description}}" class="form-control">
                             <input type="text" name="classifySP" value="{{this.Classify}}" class="form-control">
                             <input type="text" name="slSP" value="{{this.Quantity}}" class="form-control">
+                            <input type="text" name="rateSP" value="{{this.Rating}}" class="form-control">
                         </div>
 
                         <button type="submit" name="update" value="1" class="btn btn-warning">Sửa</button>

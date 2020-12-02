@@ -1,51 +1,57 @@
 let express = require('express');
 let hbs = require('express-handlebars');
 let db = require('mongoose');
+let fs=require('fs')
 let userSchema = require('./model/userSchema');
 let productSchema = require('./model/productSchema');
 let AdministratorSchema = require('./model/AdministratorSchema');
 let cartSchema = require('./model/cartSchema');
-let coachSchema = require('./model/coachSchema');
 let checkCoachSchema = require('./model/checkCoach');
-
+let notificationSchema = require('./model/NotificationSchema');
 let message = require('firebase-admin')
 let serviceAccount = require("/lamntph07140_MOB402_Lab7+Assignment/ass402/PT Connect-daca5f65cc4a.json");
 message.initializeApp({
     credential: message.credential.cert(serviceAccount),
     databaseURL: "https://demofirebase-ff65c.firebaseio.com"
 });
-
 let User = db.model('User', userSchema, 'users');
 let Product = db.model('Product', productSchema, 'products');
 let Administrator = db.model('Administrator', AdministratorSchema, 'administrator');
 let Cart = db.model("Cart", cartSchema, 'cart');
-let Coach = db.model("Coach", coachSchema, 'coach');
 let CheckCoach = db.model("checkCoach", checkCoachSchema, 'checkCoach');
+let Notification = db.model("notification", notificationSchema, 'notification');
 let body = require('body-parser');
 let multer = require('multer')
-db.connect('mongodb+srv://lamntph07140:123456ab@cluster0-kylu8.gcp.mongodb.net/databaseAss', {}).then(function (res) {
+db.connect('mongodb+srv://lamntph07140:GsGdVaP7Sg3XSbcq@cluster0-kylu8.gcp.mongodb.net/databaseAss', {}).then(function (res) {
     console.log('conected');
 })
-
+let title="PT Connect"
+let bodyNotification="Hồ sơ của bạn đã được duyệt "
+let bodyNotificationCacel="Hồ sơ của bạn không được chấp thuận "
 let app = express();
-let registrationToken = 'domYqQBsR9yUFL3xV9yyG6:APA91bGGwvuJFyrcgobEOBEgbNfPlcvYAKWc_VxanRHqf9-wECDkEWIPrj5hRvJtNu-AFJdkOUsqGeGS-A5XG3Ox-_h9nmCcEqTJL9ojOlWIiwZE0IUtErKcH9vQpkqVMAZTslb74fde';
 let payload = {
     notification: {
-        title: "Thoong bao",
-        body: "Nghi di",
+        title: title,
+        body: "Hồ sơ của bạn đã được duyệt ",
+    },
+    data:{
+        title: "Thong bao111",
+        body: "Nghi ",
     }
+
+}
+let payloadCancel = {
+    notification: {
+        title: "PT Connect",
+        body: "Hồ sơ của bạn không được chấp thuận ",
+    },
+
 }
 let option = {
     priority: "high",
     timeToLive: 60 * 60 * 24
 }
-message.messaging().sendToDevice(registrationToken, payload, option)
-    .then(function (response) {
 
-    })
-    .catch(function (error) {
-
-    })
 let multerConfig = multer.diskStorage({
     destination: function (req, file, cb) {
 
@@ -93,6 +99,7 @@ app.post('/upload', function (req, res) {
         }
     })
 });
+
 let path = require('path');
 app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use(body.json());
@@ -104,7 +111,7 @@ app.engine('.hbs', hbs({
 }));
 
 app.set('view engine', '.hbs');
-app.listen(1212);
+app.listen(1111);
 app.get('/', function (request, response) {
 
     response.render("login");
@@ -269,7 +276,7 @@ app.get('/sanpham', async function (request, response) {
         let products = await Product.find({Classify: "equipment"}).lean();
         response.render('sanpham', {data: products});
     } else if (sm == "clothes") {
-        let products = await Product.find({Classify: "Boxing"}).lean();
+        let products = await Product.find({Classify: "clothes"}).lean();
         response.render('sanpham', {data: products});
     } else {
         let products = await Product.find({}).lean();
@@ -307,6 +314,7 @@ app.post('/uploadProduct', (request, response) => {
             let descriptionSP = request.body.descriptionSP;
             let slSP = request.body.slSP;
             let classify = request.body.classifySP;
+            let rateSP = request.body.rateSP;
             let image = request.file.filename;
             let products = await Product.find({
                 ProductName: nameSP,
@@ -314,7 +322,8 @@ app.post('/uploadProduct', (request, response) => {
                 Description: descriptionSP,
                 Quantity: slSP,
                 Classify: classify,
-                ImageProduct: image
+                ImageProduct: image,
+                Rating: rateSP
             }).lean();
             if (products.length <= 0) {
                 let addProduct = new Product({
@@ -323,7 +332,8 @@ app.post('/uploadProduct', (request, response) => {
                     Description: descriptionSP,
                     Quantity: slSP,
                     Classify: classify,
-                    ImageProduct: image
+                    ImageProduct: image,
+                    Rating: rateSP
                 });
                 let status = addProduct.save();
                 if (status) {
@@ -361,6 +371,8 @@ app.get('/updatesanpham', async function (request, response) {
         let descriptionSP = request.query.descriptionSP;
         let classifySP = request.query.classifySP;
         let slSP = request.query.slSP;
+        let rateSP = request.query.rateSP;
+
 
         response.render('updatesanpham', {
             title: 'Cập nhật sản phẩm',
@@ -374,6 +386,7 @@ app.get('/updatesanpham', async function (request, response) {
             descriptionSP: descriptionSP,
             classifySP: classifySP,
             slSP: slSP,
+            rateSP: rateSP
         });
     }
 
@@ -387,13 +400,16 @@ app.get('/updateSPdone', async function (request, response) {
     let descriptionSP = request.query.descriptionSP;
     let classifySP = request.query.classifySP;
     let slSP = request.query.slSP;
+    let rateSP = request.query.rateSP;
+
     let products = await Product.find({
         ProductName: nameSP,
         Price: priceSP,
         Description: descriptionSP,
         Quantity: slSP,
         Classify: classifySP,
-        ImageProduct: exImage
+        ImageProduct: exImage,
+        Rating: rateSP
     }).lean();   //dk
     if (products.length <= 0) {
         console.log(nId + "edit sp");
@@ -403,7 +419,8 @@ app.get('/updateSPdone', async function (request, response) {
             Description: descriptionSP,
             Quantity: slSP,
             Classify: classifySP,
-            ImageProduct: exImage
+            ImageProduct: exImage,
+            Rating: rateSP
         });
         let nProduct = await Product.find({}).lean();
         if (status) {
@@ -610,7 +627,7 @@ app.get('/delKH', async function (request, response) {
 
 app.get('/listcoach', async function (request, response) {
 
-    let coach = await Coach.find({}).lean();
+    let coach = await User.find({Type:"Coach"}).lean();
     response.render('listCoach', {data: coach});
 });//done
 
@@ -619,7 +636,7 @@ app.get('/detailCoach', async function (request, response) {
     console.log(btn + "")
     if (btn == "1") {
         let idCoach = request.query.idCoach;
-        let coach = await Coach.find({_id: idCoach}).lean();
+        let coach = await User.find({_id: idCoach}).lean();
         response.render('detailCoach', {data: coach, style1: "block", style2: "none"});
     }
 
@@ -629,7 +646,7 @@ app.get('/thongke', async function (request, response) {
     let allProduct = await Product.find({}).lean();
     let allUser = await User.find({}).lean();
     let allCart = await Cart.find({}).lean();
-    let allCoach = await Coach.find({}).lean();
+    let allCoach = await User.find({Type:"Coach"}).lean();
     response.render("thongke",
         {
             allProduct: allProduct.length + "",
@@ -640,60 +657,109 @@ app.get('/thongke', async function (request, response) {
 });
 
 app.get('/quantriHLV', async function (request, response) {
-    let newCoach=await CheckCoach.find({}).lean();
+    let newCoach = await CheckCoach.find({}).lean();
     response.render('coachManagement', {
-        data:newCoach,
-        status:"none",
+        data: newCoach,
+        status: "none",
     })
 });
 
 app.get('/confirmCoach', async function (request, response) {
     let btn = request.query.btn;
     let _id = request.query.idCoach;
-    console.log("id"+_id)
+    let usernameCoach = request.query.usernameCoach;
+    console.log("id" + _id)
+    console.log(usernameCoach)
     let imgCoach = request.query.imgCoach;
     let ageCoach = request.query.ageCoach;
     let specializedCoach = request.query.specializedCoach;
     let workplaceCoach = request.query.workplaceCoach;
     let backgroundCoach = request.query.backgroundCoach;
+    let rating = request.query.rating;
+    let token = request.query.tokenCoach;
     console.log(btn + "")
-     if (btn == "confirm") {
-        let stt = await Coach.findByIdAndUpdate(_id, {
+    if (btn == "confirm") {
+        let stt = await User.findByIdAndUpdate(_id, {
             ImageProfile: imgCoach,
             Workplace: workplaceCoach,
             Background: backgroundCoach,
             Age: ageCoach,
-            Specialized: specializedCoach
+            Specialized: specializedCoach,
+            Type:"Coach",
+            Rating:rating,
+            Status:"Updated"
         });
-         console.log(stt + "")
+        let ts = Date.now();
+
+        let date_ob = new Date(ts);
+        message.messaging().sendToDevice(token, payload, option)
+            .then(function (response) {
+
+            })
+            .catch(function (error) {
+
+            });
+        console.log(stt + "")
+        let newNoti=new Notification({
+            Username: usernameCoach,
+            Title:title,
+            Description:bodyNotification,
+            DateRecieve:date_ob
+        });
+        await newNoti.save();
         if (stt) {
-            let newCoach=await CheckCoach.find({}).lean();
-            let stt2= await CheckCoach.findByIdAndDelete(_id)
-            response.render("coachManagement",{data:newCoach,status:"display",textAlert:"Xác nhận HLV thành công "})
+
+            let stt2 = await CheckCoach.findByIdAndDelete(_id)
+            if (stt2){
+                let newCoach = await CheckCoach.find({}).lean();
+                response.render("coachManagement", {
+                    data: newCoach,
+                    status: "display",
+                    textAlert: "Xác nhận HLV thành công "
+                });
+            }
         } else {
-            let newCoach=await CheckCoach.find({}).lean();
-            response.render("coachManagement",{data:newCoach,status:"display",textAlert:"Xác nhận HLV bị lỗi "})
+            let newCoach = await CheckCoach.find({}).lean();
+            response.render("coachManagement", {data: newCoach, status: "display", textAlert: "Xác nhận HLV bị lỗi "})
         }
     } else if (btn == "delete") {
-        let stt2=await CheckCoach.findByIdAndDelete(_id)
-         if (stt2){
-             let newCoach=await CheckCoach.find({}).lean();
-             response.render("coachManagement",{data:newCoach,status:"display",textAlert:"Hủy HLV thành công"})
-         }else {
-             let newCoach=await CheckCoach.find({}).lean();
-             response.render("coachManagement",{data:newCoach,status:"display",textAlert:"Hủy HLV bị lỗi"})
-         }
+        let ts = Date.now();
+
+        let date_ob = new Date(ts);
+        message.messaging().sendToDevice(token, payloadCancel, option)
+            .then(function (response) {
+
+            })
+            .catch(function (error) {
+
+            });
+
+        let newNoti=new Notification({
+            Username: usernameCoach,
+            Title:title,
+            Description:bodyNotificationCacel,
+            DateRecieve:date_ob
+        });
+        await newNoti.save();
+        let stt2 = await CheckCoach.findByIdAndDelete(_id)
+        await User.findByIdAndUpdate(_id,{Status:"None"})
+        if (stt2) {
+            let newCoach = await CheckCoach.find({}).lean();
+            response.render("coachManagement", {data: newCoach, status: "display", textAlert: "Hủy HLV thành công"})
+        } else {
+            let newCoach = await CheckCoach.find({}).lean();
+            response.render("coachManagement", {data: newCoach, status: "display", textAlert: "Hủy HLV bị lỗi"})
+        }
 
     }
 
 
 });
 // api for App
-let userOnline = "";
 
 app.get('/getUser', async function (request, response) {
-    let username = request.query.Username;
-    let users = await User.find({Username: username}).lean();
+
+    let users = await User.find({}).lean();
     response.send(users);
 });
 app.get('/quantityUser', async function (request, response) {
@@ -703,30 +769,15 @@ app.get('/quantityUser', async function (request, response) {
 app.get('/loginApp', async function (request, response) {
     let userLogin = request.query.Username;
     let passwordLogin = request.query.Password;
-    let stt = await Administrator.find({userAdmin: userLogin, passwordAdmin: passwordLogin}).lean();
-    let stt2 = await Coach.find({Username: userLogin, Password: passwordLogin}).lean();
-    console.log(stt2 + "")
-    if (stt.length > 0) {
-        response.send("Admin")
-    } else if (stt2.length > 0) {
-        response.send("Coach")
-        userOnline = userLogin;
-    } else {
-        let status = await User.find({Username: userLogin, Password: passwordLogin}).lean();   //dk
-        if (status.length > 0) {
-            userOnline = userLogin;
-            response.send("Success");
-        } else {
-            response.send('Fail');
-        }
-    }
+    let user = await User.find({Username: userLogin, Password: passwordLogin}).lean();
+    response.send(user);
 
 });
 app.get('/GetInforUser', async function (request, response) {
+    let userOnline = request.query.userOnline
     let infor = await User.find({Username: userOnline}).lean();
     response.send(infor);
 });
-
 
 app.post('/signUpUser', async function (request, response) {
     let nUser = request.body.Username;
@@ -734,33 +785,43 @@ app.post('/signUpUser', async function (request, response) {
     let nFullname = request.body.Fullname;
     let nPhone = request.body.Phone;
     let nEmail = request.body.Email;
-    let nAddress = request.body.Address;
+    let type = request.body.Type;
+    let statusCoach = request.body.Status;
     let users = await User.find({Username: nUser}).lean();   //dk
-    if (users.length <= 0) {
-        let stt = await User.find({Phone: nPhone, Email: nEmail}).lean();
-        console.log(stt)
-        if (stt.length > 0) {
-            response.send("Email hoặc Số điện thoại đã được sử dụng");
-        } else {
+
             let newUser = new User({
                 Username: nUser,
                 Password: nPass,
                 Fullname: nFullname,
                 Phone: nPhone,
                 Email: nEmail,
-                Address: nAddress,
+                Type: type,
+                Status: statusCoach
             });
-            console.log("1")
             let status = await newUser.save();
             if (status) {
-                console.log("aa")
                 response.send("Create Account Success");
             } else {
                 console.log(status)
                 response.send("Create Account Failure");
             }
-        }
 
+
+
+});
+
+app.post('/verifyPhoneNo', async function (request, response) {
+    let nUser = request.body.Username;
+    let nPhone = request.body.Phone;
+    let nEmail = request.body.Email;
+    let users = await User.find({Username: nUser}).lean();   //dk
+    if (users.length <= 0) {
+        let stt = await User.find({Phone: nPhone, Email: nEmail}).lean();
+        if (stt.length > 0) {
+            response.send("Email hoặc Số điện thoại đã được sử dụng");
+        } else {
+            response.send("Confirm")
+        }
     } else {
         console.log(users)
         response.send("Account already exists");
@@ -776,16 +837,9 @@ app.post('/resetPass', async function (request, response) {
     let nPhone = request.body.Phone;
     let nEmail = request.body.Email;
     console.log(id + "");
-    let status1 = await Coach.find({Username: nUser, Phone: nPhone, Email: nEmail}).lean();
+
     let status2 = await User.find({Username: nUser, Phone: nPhone, Email: nEmail}).lean();
-    if (status1.length > 0) {
-        let stt = await Coach.findByIdAndUpdate(id, {Password: nPass});
-        if (stt) {
-            response.send("Reset Success")
-        } else {
-            response.send("Reset Fail")
-        }
-    } else if (status2.length > 0) {
+    if (status2.length > 0) {
         let stt = await User.findByIdAndUpdate(id, {Password: nPass});
         if (stt) {
             response.send("Reset Success")
@@ -859,12 +913,14 @@ app.get('/allProduct', async function (request, response) {
 });
 
 app.get('/getCart', async function (request, response) {
-    let cart = await Cart.find({}).lean();
+    let username = request.query.Username;
+    let cart = await Cart.find({Username: username}).lean();
     response.send(cart);
 });
 
 app.post('/upCart', async function (request, response) {
     let username = request.body.Username;
+    console.log(username);
     let cart = request.body.Cart;
     console.log(cart);
     let dateCart = request.body.DateCart;
@@ -889,84 +945,105 @@ app.post('/upCart', async function (request, response) {
 })
 
 
-app.post('/signUpCoach', async function (request, response) {
-    let nUser = request.body.Username;
-    let nPass = request.body.Password;
-    let nCoachName = request.body.CoachName;
-    let nPhone = request.body.Phone;
-    let nEmail = request.body.Email;
-    let nAddress = request.body.Address;
-    let coach = await Coach.find({Username: nUser}).lean();   //dk
-    if (coach.length <= 0) {
-        let stt = await Coach.find({Phone: nPhone, Email: nEmail}).lean();
-        if (stt.length > 0) {
-            response.send("Email hoặc Số điện thoại đã được sử dụng");
-        } else {
-            let newCoach = new Coach({
-                Username: nUser,
-                Password: nPass,
-                CoachName: nCoachName,
-                Phone: nPhone,
-                Email: nEmail,
-                Address: nAddress,
-            });
-            let status = await newCoach.save();
-            if (status) {
-                response.send("Create Account Success");
-            } else {
-                response.send("Create Account Failure");
-            }
-        }
-
-    } else {
-        response.send("Account already exists");
-    }
-
-});
-
 app.get('/getAllCoach', async function (request, response) {
-    let coach = await Coach.find({}).lean();
+    let coach = await User.find({Type:"Coach",Status:"Updated"}).lean();
     response.send(coach);
 
 });
 
+
 app.post('/checkInforCoach', async function (request, response) {
-    let id = request.body._id;
-    let CoachName = request.body.CoachName;
-    let ImageProfile = request.body.ImageProfile;
-    let Workplace = request.body.Workplace;
-    let Background = request.body.Background;
-    let Age = request.body.Age;
-    let Specialized = request.body.Specialized;
+    file(request, response, async function (err) {
+        if (err) {
+            // kiem tra loi co phai la max file ko
+            if (err instanceof multer.MulterError) {
+                response.send('kích thước file lớn hơn 2mb' + response)
+            } else {
+                response.send('' + err)
+            }
 
-    let newCheckCoach=new CheckCoach({
-        _id:id,
-        CoachName:CoachName,
-        ImageProfile:ImageProfile,
-        Workplace:Workplace,
-        Specialized:Specialized,
-        Age:Age,
-        Background:Background
+        } else {
+            let id = request.body._id;
+            let CoachName = request.body.Fullname;
+            let username = request.body.Username;
+            console.log("Username"+username);
+            let ImageProfile = request.file.filename;
+            let Workplace = request.body.Workplace;
+            let Background = request.body.Background;
+            let Age = request.body.Age;
+            let Specialized = request.body.Specialized;
+            let statusUpdate = request.body.Status;
+            let token = request.body.Token;
+            console.log(ImageProfile)
+            let update=await User.findByIdAndUpdate(id,{
+                Status:statusUpdate,
 
-    });
-    let stt=await newCheckCoach.save();
-    if (stt){
-        let checkCoach= await CheckCoach.find().lean();
-        response.render("coachManagement",{data:checkCoach, status:"none"});
+            });
+            let newCheckCoach = new CheckCoach({
+                _id: id,
+                CoachName: CoachName,
+                ImageProfile: ImageProfile,
+                Workplace: Workplace,
+                Specialized: Specialized,
+                Age: Age,
+                Background: Background,
+                Token:token,
+                Username:username
+
+            });
+            let stt = await newCheckCoach.save();
+            if (stt) {
+                let checkCoach = await CheckCoach.find().lean();
+                response.render("coachManagement", {data: checkCoach, status: "none"});
+            } else {
+                response.send("Fails")
+            }
+        }
+
+    })
+
+
+
+});
+
+app.post('/matchCoach', async function (request, response) {
+
+
+});
+
+app.get("/getAllNotification", async function (request,response){
+    let username=request.query.Username;
+    let notification=await Notification.find({Username:username}).lean();
+    response.send(notification);
+});
+
+app.get("/getCoachForType",async function (request,response){
+    let specialized=request.query.Specialized;
+    let coach=await User.find({Specialized:specialized,Type:"Coach",Status:"Updated"})
+    response.send(coach);
+
+});
+
+app.get("/getHotCoach",async function (request,response){
+    let coach=await User.find({Type:"Coach",Status:"Updated",Rating:"5"})
+    response.send(coach);
+
+});
+
+app.post("/switchCoach",async function (request,response){
+    let status=request.body.Status;
+    let id=request.body._id
+    console.log(id);
+    console.log(status);
+    let stt=await User.findByIdAndUpdate(id,{Status:status});
+    if (stt.length>0){
+        response.send("Done Change");
     }else {
-        response.send("Fails")
+        response.send("Fail Change");
     }
 
 
 });
 
-app.post('/matchCoach', async function (request,response){
 
 
-});
-
-app.post('/uploadRegistration',async function (request,response){
-    let token=request.body.token;
-    registrationToken=token;
-    console.log(registrationToken+"");
-})

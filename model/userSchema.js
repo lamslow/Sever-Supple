@@ -5,7 +5,17 @@ const UserSchema = mongoose.Schema({
     Fullname: {type: String},
     Phone: {type: String},
     Email: {type: String},
-    Address: {type: String}
-
+    Address: {type: String},
+    ImageProfile:{type:String},
+    Workplace: {type: String},
+    Longitude:{type:String},
+    Latitude:{type:String},
+    Background:{type:String},
+    Age:{type:Number},
+    Specialized:{type:Array},
+    Rating:{type:Number},
+    Status:{type:String},
+    Type:{type:String},
+    // Token:{type:String}
 });
 module.exports = UserSchema;
