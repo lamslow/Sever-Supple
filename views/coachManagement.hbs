@@ -70,54 +70,63 @@
 </div>
 <div class=" rounded-bottom bg-light ">
     <br> <br>
-<div class=" container col-10">
-<div class="row row-cols-1 row-cols-md-3">
-    {{#each data}}
-        <div class="col mb-4">
-            <div class="card">
-                <form action="confirmCoach" method="get">
-                    <img src="../public/{{this.ImageProfile}}" name="imgCoach" class="card-img-top" width="100px"
-                         height="200px"
-                         alt='../public/{{this.ImageProfile}}'>
+    <div class=" container col-10">
+        <div class="row row-cols-1 row-cols-md-3">
+            {{#each data}}
+                <div class="col mb-4">
+                    <div class="card">
+                        <form action="confirmCoach" method="post">
+                            <img src="../public/{{this.ImageProfile}}" name="imgCoach" class="card-img-top"
+                                 width="100px"
+                                 height="200px"
+                                 alt='../public/{{this.ImageProfile}}'>
 
-                    <div class="card-body">
-                        <h5 class="card-title text-center">{{this.CoachName}} - {{this.Age}} tuổi</h5>
-                        <p class="card-text">Chuyên ngành: {{this.Specialized}}</p>
-                        <p class="card-text">Nơi làm việc: {{this.Workplace}}</p>
-                        <p class="card-text">Giới thiệu: {{this.Background}}</p>
-                        <input class="input-group-text" required name="rating" placeholder="Rating">
-                        <div class="card-footer">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">{{this.CoachName}} - {{this.Age}} tuổi</h5>
+                                <p class="card-text">Chuyên ngành: {{this.Specialized}}</p>
+                                <p class="card-text">Địa chỉ: {{this.Address}}</p>
+                                <p class="card-text">Khu vực: {{this.Workplace}}</p>
+                                <p class="card-text">Giới thiệu: {{this.Background}}</p>
+                                <input class="input-group-text" required name="rating" placeholder="Rating">
+                                <div class="card-footer">
 
-                            <div class="form-group" style="display: none">
-                                <input type="text" name="idCoach" value="{{this._id}}" class="form-control">
-                                <input type="text" name="nameCoach" value="{{this.CoachName}}" class="form-control">
-                                <input type="text" name="usernameCoach" value="{{this.Username}}" class="form-control">
-                                <input type="text" name="imgCoach" value="{{this.ImageProfile}}" class="form-control">
-                                <input type="text" name="ageCoach" value="{{this.Age}}" class="form-control">
-                                <input type="text" name="specializedCoach" value="{{this.Specialized}}"
-                                       class="form-control">
-                                <input type="text" name="workplaceCoach" value="{{this.Workplace}}"
-                                       class="form-control">
-                                <input type="text" name="backgroundCoach" value="{{this.Background}}"
-                                       class="form-control">
-                                <input type="text" name="tokenCoach" value="{{this.Token}}"
-                                       class="form-control">
+                                    <div class="form-group" style="display: none">
+                                        <input type="text" name="idCoach" value="{{this._id}}" class="form-control">
+                                        <input type="text" name="nameCoach" value="{{this.CoachName}}"
+                                               class="form-control">
+                                        <input type="text" name="usernameCoach" value="{{this.Username}}"
+                                               class="form-control">
+                                        <input type="text" name="imgCoach" value="{{this.ImageProfile}}"
+                                               class="form-control">
+                                        <input type="text" name="ageCoach" value="{{this.Age}}"
+                                               class="form-control">
+                                        <input type="text" name="addressCoach" value="{{this.Address}}"
+                                               class="form-control">
+                                        <input type="text" name="specializedCoach" value="{{this.Specialized}}"
+                                               class="form-control">
+                                        <input type="text" name="workplaceCoach" value="{{this.Workplace}}"
+                                               class="form-control">
+                                        <input type="text" name="backgroundCoach" value="{{this.Background}}"
+                                               class="form-control">
+                                        <input type="text" name="tokenCoach" value="{{this.Token}}"
+                                               class="form-control">
+                                    </div>
+                                    <button type="submit" value="confirm" name="btn" class="btn btn-primary col-12">Xác
+                                        nhận
+                                    </button>
+                                    <br><br>
+
+                                    <button type="submit" value="delete" name="btn" class="btn btn-primary col-12">Hủy
+                                    </button>
+
+                                </div>
                             </div>
-                            <button type="submit" value="confirm" name="btn" class="btn btn-primary col-12">Xác
-                                nhận
-                            </button>
-                            <br><br>
-
-                            <button type="submit" value="delete" name="btn" class="btn btn-primary col-12">Hủy
-                            </button>
-                </form>
-            </div>
+                        </form>
+                    </div>
+                </div>
+            {{/each}}
         </div>
     </div>
-    </div>
-    {{/each}}
-</div>
-</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

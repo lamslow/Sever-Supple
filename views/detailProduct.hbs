@@ -59,49 +59,43 @@
         </form>
     </div>
 </nav>
-<div class="row">
-    <div class="col-sm-2">
-        <div class="list-group">
-            <a href="/quantriHLV" class="list-group-item list-group-item-action">
-                Quản trị HLV
-            </a>
-            <a href="/thongke" class="list-group-item list-group-item-action">
-                Thống kê
-            </a>
-        </div>
-    </div>
-    <div class=" rounded-bottom bg-light ">
-        <div class=" container col-8">
-            <div class="row row-cols-1 row-cols-md-3">
-                {{#each data}}
-                    <div class="col mb-4">
-                        <div class="card">
-                            <img src="../public/{{this.ImageProduct}}" class="card-img-top" width="100px" height="200px"
-                                 alt='../public/{{this.ImageProduct}}'>
-                            <div class="card-body">
-                                <h5 class="card-title">{{this.ProductName}}</h5>
-                                <p class="card-text">Loại sản phẩm:  {{this.Classify}}</p>
-                                <p class="">Giá:  {{this.Price}} VNĐ</p>
-                                <div class="card-footer">
-                                    <form action="detailProduct" method="get">
-                                        <div class="form-group" style="display: none">
-                                            <input type="text" name="idSP" value="{{this._id}}" class="form-control">
-                                        </div>
-                                        <button type="submit" value="1"  name="btn" class="btn btn-primary col-12">Chi tiết</button>
-                                    </form>
 
-                                </div>
-                            </div>
-                        </div>
+<div class=" rounded-bottom bg-light ">
+    <br> <br>
+    <div class=" container col-10">
+        {{#each data}}
+            <div class="col mb-4">
+                <div class="text-center">
+                    <img src="../public/{{this.ImageProduct}}" class="img-thumbnail align-content-center"
+                         width="300px"
+                         height="300px"
+                         alt='../public/{{this.ImageProduct}}'>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{this.ProductName}}</h5>
+                    <p class="card-text text-center">Giá: {{this.Price}}</p>
+                    <div class="card-footer">
+                        <h5>Mô tả</h5>
+                        <p>{{this.Description}}</p>
+                        <h5>Loại</h5>
+                        <p>{{this.Classify}}</p>
+                        <h5>Rating</h5>
+                        <p>{{this.Rating}}</p>
                     </div>
-                {{/each}}
+                    <br>
+                </div>
             </div>
-        </div>
+        {{/each}}
     </div>
 </div>
 
+<div class="text-center" style="display: {{style2}}">
+    <form method="post" action="confirmCoach">
+        <button class="btn btn-outline-success" type="submit" value="Confirm" name="sm">Đồng ý</button>
+        <button class="btn btn-outline-success" type="submit" value="Cancel" name="sm">Hủy</button>
+    </form>
 
-
+</div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

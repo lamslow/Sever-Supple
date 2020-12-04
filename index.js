@@ -1,7 +1,7 @@
 let express = require('express');
 let hbs = require('express-handlebars');
 let db = require('mongoose');
-let fs=require('fs')
+let fs = require('fs')
 let userSchema = require('./model/userSchema');
 let productSchema = require('./model/productSchema');
 let AdministratorSchema = require('./model/AdministratorSchema');
@@ -25,16 +25,16 @@ let multer = require('multer')
 db.connect('mongodb+srv://lamntph07140:GsGdVaP7Sg3XSbcq@cluster0-kylu8.gcp.mongodb.net/databaseAss', {}).then(function (res) {
     console.log('conected');
 })
-let title="PT Connect"
-let bodyNotification="Hồ sơ của bạn đã được duyệt "
-let bodyNotificationCacel="Hồ sơ của bạn không được chấp thuận "
+let title = "PT Connect"
+let bodyNotification = "Hồ sơ của bạn đã được duyệt "
+let bodyNotificationCacel = "Hồ sơ của bạn không được chấp thuận "
 let app = express();
 let payload = {
     notification: {
         title: title,
         body: "Hồ sơ của bạn đã được duyệt ",
     },
-    data:{
+    data: {
         title: "Thong bao111",
         body: "Nghi ",
     }
@@ -111,7 +111,7 @@ app.engine('.hbs', hbs({
 }));
 
 app.set('view engine', '.hbs');
-app.listen(1111);
+app.listen(1212);
 app.get('/', function (request, response) {
 
     response.render("login");
@@ -627,10 +627,18 @@ app.get('/delKH', async function (request, response) {
 
 app.get('/listcoach', async function (request, response) {
 
-    let coach = await User.find({Type:"Coach"}).lean();
+    let coach = await User.find({Type: "Coach"}).lean();
     response.render('listCoach', {data: coach});
 });//done
-
+app.get('/detailProduct', async function (request, response) {
+    let btn = request.query.btn;
+    console.log(btn + "")
+    if (btn == "1") {
+        let idSP = request.query.idSP;
+        let product = await Product.find({_id: idSP}).lean();
+        response.render('detailProduct', {data: product, style1: "block", style2: "none"});
+    }
+});
 app.get('/detailCoach', async function (request, response) {
     let btn = request.query.btn;
     console.log(btn + "")
@@ -639,14 +647,13 @@ app.get('/detailCoach', async function (request, response) {
         let coach = await User.find({_id: idCoach}).lean();
         response.render('detailCoach', {data: coach, style1: "block", style2: "none"});
     }
-
 });
 
 app.get('/thongke', async function (request, response) {
     let allProduct = await Product.find({}).lean();
     let allUser = await User.find({}).lean();
     let allCart = await Cart.find({}).lean();
-    let allCoach = await User.find({Type:"Coach"}).lean();
+    let allCoach = await User.find({Type: "Coach"}).lean();
     response.render("thongke",
         {
             allProduct: allProduct.length + "",
@@ -663,21 +670,28 @@ app.get('/quantriHLV', async function (request, response) {
         status: "none",
     })
 });
-
 app.get('/confirmCoach', async function (request, response) {
-    let btn = request.query.btn;
-    let _id = request.query.idCoach;
-    let usernameCoach = request.query.usernameCoach;
+    let newCoach = await CheckCoach.find({}).lean();
+    response.render('coachManagement', {
+        data: newCoach,
+        status: "none",
+    })
+});
+app.post('/confirmCoach', async function (request, response) {
+    let btn = request.body.btn;
+    let _id = request.body.idCoach;
+    let usernameCoach = request.body.usernameCoach;
     console.log("id" + _id)
     console.log(usernameCoach)
-    let imgCoach = request.query.imgCoach;
-    let ageCoach = request.query.ageCoach;
-    let specializedCoach = request.query.specializedCoach;
-    let workplaceCoach = request.query.workplaceCoach;
-    let backgroundCoach = request.query.backgroundCoach;
-    let rating = request.query.rating;
-    let token = request.query.tokenCoach;
-    console.log(btn + "")
+    let imgCoach = request.body.imgCoach;
+    let ageCoach = request.body.ageCoach;
+    let specializedCoach = request.body.specializedCoach;
+    let workplaceCoach = request.body.workplaceCoach;
+    let backgroundCoach = request.body.backgroundCoach;
+    let rating = request.body.rating;
+    let token = request.body.tokenCoach;
+    let addressCoach = request.body.addressCoach;
+    console.log(addressCoach + "")
     if (btn == "confirm") {
         let stt = await User.findByIdAndUpdate(_id, {
             ImageProfile: imgCoach,
@@ -685,9 +699,10 @@ app.get('/confirmCoach', async function (request, response) {
             Background: backgroundCoach,
             Age: ageCoach,
             Specialized: specializedCoach,
-            Type:"Coach",
-            Rating:rating,
-            Status:"Updated"
+            Type: "Coach",
+            Rating: rating,
+            Status: "Updated",
+            Address: addressCoach,
         });
         let ts = Date.now();
 
@@ -700,17 +715,17 @@ app.get('/confirmCoach', async function (request, response) {
 
             });
         console.log(stt + "")
-        let newNoti=new Notification({
+        let newNoti = new Notification({
             Username: usernameCoach,
-            Title:title,
-            Description:bodyNotification,
-            DateRecieve:date_ob
+            Title: title,
+            Description: bodyNotification,
+            DateRecieve: date_ob
         });
         await newNoti.save();
         if (stt) {
 
             let stt2 = await CheckCoach.findByIdAndDelete(_id)
-            if (stt2){
+            if (stt2) {
                 let newCoach = await CheckCoach.find({}).lean();
                 response.render("coachManagement", {
                     data: newCoach,
@@ -734,15 +749,15 @@ app.get('/confirmCoach', async function (request, response) {
 
             });
 
-        let newNoti=new Notification({
+        let newNoti = new Notification({
             Username: usernameCoach,
-            Title:title,
-            Description:bodyNotificationCacel,
-            DateRecieve:date_ob
+            Title: title,
+            Description: bodyNotificationCacel,
+            DateRecieve: date_ob
         });
         await newNoti.save();
         let stt2 = await CheckCoach.findByIdAndDelete(_id)
-        await User.findByIdAndUpdate(_id,{Status:"None"})
+        await User.findByIdAndUpdate(_id, {Status: "None"})
         if (stt2) {
             let newCoach = await CheckCoach.find({}).lean();
             response.render("coachManagement", {data: newCoach, status: "display", textAlert: "Hủy HLV thành công"})
@@ -787,25 +802,26 @@ app.post('/signUpUser', async function (request, response) {
     let nEmail = request.body.Email;
     let type = request.body.Type;
     let statusCoach = request.body.Status;
+    let sex = request.body.Sex;
     let users = await User.find({Username: nUser}).lean();   //dk
 
-            let newUser = new User({
-                Username: nUser,
-                Password: nPass,
-                Fullname: nFullname,
-                Phone: nPhone,
-                Email: nEmail,
-                Type: type,
-                Status: statusCoach
-            });
-            let status = await newUser.save();
-            if (status) {
-                response.send("Create Account Success");
-            } else {
-                console.log(status)
-                response.send("Create Account Failure");
-            }
-
+    let newUser = new User({
+        Username: nUser,
+        Password: nPass,
+        Fullname: nFullname,
+        Phone: nPhone,
+        Email: nEmail,
+        Type: type,
+        Status: statusCoach,
+        Sex: sex
+    });
+    let status = await newUser.save();
+    if (status) {
+        response.send("Create Account Success");
+    } else {
+        console.log(status)
+        response.send("Create Account Failure");
+    }
 
 
 });
@@ -922,6 +938,7 @@ app.post('/upCart', async function (request, response) {
     let username = request.body.Username;
     console.log(username);
     let cart = request.body.Cart;
+    let phone = request.body.Phone;
     console.log(cart);
     let dateCart = request.body.DateCart;
     let recipients = request.body.Recipients;
@@ -931,6 +948,7 @@ app.post('/upCart', async function (request, response) {
         Username: username,
         Cart: cart,
         Recipients: recipients,
+        Phone: phone,
         ReceivingAddress: receivingAddress,
         DateCart: dateCart,
         TotalPrice: totalPrice,
@@ -946,7 +964,7 @@ app.post('/upCart', async function (request, response) {
 
 
 app.get('/getAllCoach', async function (request, response) {
-    let coach = await User.find({Type:"Coach",Status:"Updated"}).lean();
+    let coach = await User.find({Type: "Coach", Status: "Updated"}).lean();
     response.send(coach);
 
 });
@@ -966,17 +984,18 @@ app.post('/checkInforCoach', async function (request, response) {
             let id = request.body._id;
             let CoachName = request.body.Fullname;
             let username = request.body.Username;
-            console.log("Username"+username);
+            console.log("Username" + username);
             let ImageProfile = request.file.filename;
             let Workplace = request.body.Workplace;
+            let Address = request.body.Address;
             let Background = request.body.Background;
             let Age = request.body.Age;
             let Specialized = request.body.Specialized;
             let statusUpdate = request.body.Status;
             let token = request.body.Token;
-            console.log(ImageProfile)
-            let update=await User.findByIdAndUpdate(id,{
-                Status:statusUpdate,
+            console.log(Address)
+            let update = await User.findByIdAndUpdate(id, {
+                Status: statusUpdate,
 
             });
             let newCheckCoach = new CheckCoach({
@@ -987,8 +1006,9 @@ app.post('/checkInforCoach', async function (request, response) {
                 Specialized: Specialized,
                 Age: Age,
                 Background: Background,
-                Token:token,
-                Username:username
+                Token: token,
+                Username: username,
+                Address: Address
 
             });
             let stt = await newCheckCoach.save();
@@ -1003,42 +1023,59 @@ app.post('/checkInforCoach', async function (request, response) {
     })
 
 
-
 });
 
 app.post('/matchCoach', async function (request, response) {
+    let place = request.body.Workplace;
+    let specialized = request.body.Specialized;
+    let sex = request.body.Sex;
+    let ageFrom = request.body.AgeFrom;
+    let ageTo = request.body.AgeTo;
+    let user = await User.find({
+        $or: [
+            {$and: [{Workplace: place}, {Specialized: specialized}, {$and: [{Age: {$gte: ageFrom}}, {Age: {$lte: ageTo}}]}, {Sex: sex}]},
+            {$and: [{Workplace: place}, {Specialized: specialized}, {$and: [{Age: {$gte: ageFrom}}, {Age: {$lte: ageTo}}]}]},
+            {$and: [{Workplace: place}, {Specialized: specialized}, {Sex: sex}]},
+            {$and: [{Workplace: place}, {Specialized: specialized}]}
+        ]
+    });
+    if (user.length > 0) {
+        response.send(user);
+    } else {
+        response.send("Fail");
+    }
 
 
 });
 
-app.get("/getAllNotification", async function (request,response){
-    let username=request.query.Username;
-    let notification=await Notification.find({Username:username}).lean();
+app.get("/getAllNotification", async function (request, response) {
+    let username = request.query.Username;
+    let notification = await Notification.find({Username: username}).lean();
     response.send(notification);
 });
 
-app.get("/getCoachForType",async function (request,response){
-    let specialized=request.query.Specialized;
-    let coach=await User.find({Specialized:specialized,Type:"Coach",Status:"Updated"})
+app.get("/getCoachForType", async function (request, response) {
+    let specialized = request.query.Specialized;
+    let coach = await User.find({Specialized: specialized, Type: "Coach", Status: "Updated"})
     response.send(coach);
 
 });
 
-app.get("/getHotCoach",async function (request,response){
-    let coach=await User.find({Type:"Coach",Status:"Updated",Rating:"5"})
+app.get("/getHotCoach", async function (request, response) {
+    let coach = await User.find({Type: "Coach", Status: "Updated", Rating: "5"})
     response.send(coach);
 
 });
 
-app.post("/switchCoach",async function (request,response){
-    let status=request.body.Status;
-    let id=request.body._id
+app.post("/switchCoach", async function (request, response) {
+    let status = request.body.Status;
+    let id = request.body._id
     console.log(id);
     console.log(status);
-    let stt=await User.findByIdAndUpdate(id,{Status:status});
-    if (stt.length>0){
+    let stt = await User.findByIdAndUpdate(id, {Status: status});
+    if (stt.length > 0) {
         response.send("Done Change");
-    }else {
+    } else {
         response.send("Fail Change");
     }
 

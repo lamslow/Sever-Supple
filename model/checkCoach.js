@@ -7,7 +7,8 @@ const CheckCoachSchema = mongoose.Schema({
     Background:{type:String},
     Age:{type:Number},
     Specialized:{type:Array},
-    Token:{type:String}
+    Token:{type:String},
+    Address:{type:String},
 
 });
 module.exports = CheckCoachSchema;
