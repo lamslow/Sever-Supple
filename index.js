@@ -10,7 +10,7 @@ let checkCoachSchema = require('./model/checkCoach');
 let notificationSchema = require('./model/NotificationSchema');
 let reportSchema = require('./model/reportSchema');
 let message = require('firebase-admin')
-let serviceAccount = require("/lamntph07140_MOB402_Lab7+Assignment/ass402/PT Connect-daca5f65cc4a.json");
+let serviceAccount = require("./PT Connect-daca5f65cc4a.json");
 message.initializeApp({
     credential: message.credential.cert(serviceAccount),
     databaseURL: "https://demofirebase-ff65c.firebaseio.com"
