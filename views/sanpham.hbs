@@ -28,9 +28,12 @@
                     </button>
                     <form action="sanpham" method="get">
                         <div class="dropdown-menu dropdown-menu-lg-right">
-                            <button class="dropdown-item" value="supply" name="sm" type="submit">Thực phẩm hỗ trợ</button>
-                            <button class="dropdown-item" value="equipment" name="sm" type="submit">Dụng cụ tập luyện</button>
-                            <button class="dropdown-item" value="clothes" name="sm" type="submit">Quần áo tập luyện</button>
+                            <button class="dropdown-item" value="supply" name="sm" type="submit">Thực phẩm hỗ trợ
+                            </button>
+                            <button class="dropdown-item" value="equipment" name="sm" type="submit">Dụng cụ tập luyện
+                            </button>
+                            <button class="dropdown-item" value="clothes" name="sm" type="submit">Quần áo tập luyện
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -60,14 +63,20 @@
     </div>
 </nav>
 <div class="row">
-    <div class="col-sm-2">
-        <div class="list-group">
-            <a href="/quantriHLV" class="list-group-item list-group-item-action">
-                Quản trị HLV
-            </a>
-            <a href="/thongke" class="list-group-item list-group-item-action">
-                Thống kê
-            </a>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="list-group">
+                <a href="/quantriHLV" class="list-group-item list-group-item-action">
+                    Quản trị HLV
+                </a>
+                <a href="/baocao" class="list-group-item list-group-item-action">
+                    Phản hồi từ khách hàng
+                </a>
+                <a href="/thongke" class="list-group-item list-group-item-action">
+                    Thống kê
+                </a>
+
+            </div>
         </div>
     </div>
     <div class=" rounded-bottom bg-light ">
@@ -87,7 +96,9 @@
                                         <div class="form-group" style="display: none">
                                             <input type="text" name="idSP" value="{{this._id}}" class="form-control">
                                         </div>
-                                        <button type="submit" value="1"  name="btn" class="btn btn-primary col-12">Chi tiết</button>
+                                        <button type="submit" value="1" name="btn" class="btn btn-primary col-12">Chi
+                                            tiết
+                                        </button>
                                     </form>
 
                                 </div>
@@ -99,8 +110,6 @@
         </div>
     </div>
 </div>
-
-
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

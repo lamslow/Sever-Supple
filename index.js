@@ -8,6 +8,7 @@ let AdministratorSchema = require('./model/AdministratorSchema');
 let cartSchema = require('./model/cartSchema');
 let checkCoachSchema = require('./model/checkCoach');
 let notificationSchema = require('./model/NotificationSchema');
+let reportSchema = require('./model/reportSchema');
 let message = require('firebase-admin')
 let serviceAccount = require("/lamntph07140_MOB402_Lab7+Assignment/ass402/PT Connect-daca5f65cc4a.json");
 message.initializeApp({
@@ -20,6 +21,7 @@ let Administrator = db.model('Administrator', AdministratorSchema, 'administrato
 let Cart = db.model("Cart", cartSchema, 'cart');
 let CheckCoach = db.model("checkCoach", checkCoachSchema, 'checkCoach');
 let Notification = db.model("notification", notificationSchema, 'notification');
+let Report = db.model("report", reportSchema, 'report');
 let body = require('body-parser');
 let multer = require('multer')
 db.connect('mongodb+srv://lamntph07140:GsGdVaP7Sg3XSbcq@cluster0-kylu8.gcp.mongodb.net/databaseAss', {}).then(function (res) {
@@ -39,7 +41,8 @@ let payload = {
         body: "Nghi ",
     }
 
-}
+};
+
 let payloadCancel = {
     notification: {
         title: "PT Connect",
@@ -47,6 +50,8 @@ let payloadCancel = {
     },
 
 }
+
+
 let option = {
     priority: "high",
     timeToLive: 60 * 60 * 24
@@ -670,13 +675,67 @@ app.get('/quantriHLV', async function (request, response) {
         status: "none",
     })
 });
-app.get('/confirmCoach', async function (request, response) {
-    let newCoach = await CheckCoach.find({}).lean();
-    response.render('coachManagement', {
-        data: newCoach,
-        status: "none",
-    })
+
+app.get('/baocao', async function (request, response) {
+    let report = await Report.find({Status: "No Feedback"}).lean();
+    response.render("report", {data: report,status:"none"});
 });
+
+app.post('/detailReport', async function (request, response) {
+    let id = request.body.idReport;
+    let report = await Report.find({_id: id}).lean();
+    response.render("detailReport", {data: report});
+});
+
+app.post('/sendReport', async function (request, response) {
+
+    let btn = request.body.sm;
+    let FeedBack = request.body.FeedBack;
+    let idReport = request.body.idReport;
+    let usernameReport = request.body.usernameReport;
+    let token = request.body.tokenReport;
+    console.log("token " + token);
+    console.log("id " + idReport);
+    console.log("id " + usernameReport);
+    console.log("id " + FeedBack);
+    console.log("id " + btn);
+    if (btn == "Send") {
+        let ts = Date.now();
+        let date_ob = new Date(ts);
+        let payloadReport = {
+            notification: {
+                title: "PT Connect phản hồi",
+                body: FeedBack,
+            },
+        }
+        message.messaging().sendToDevice(token, payloadReport, option)
+            .then(function (response) {
+
+            })
+            .catch(function (error) {
+
+            });
+        let newNotiReport = new Notification({
+            Username: usernameReport,
+            Title: "PT Connect phản hồi",
+            Description: FeedBack,
+            DateRecieve: date_ob
+        });
+        await newNotiReport.save();
+        await Report.findByIdAndUpdate(idReport, {Status: "Feedbacked"});
+        let report = await Report.find({Status: "No Feedback"});
+        response.render("report", {data: report,textAlert:"Gửi phản hồi thành công",status:"block"});
+
+    } else if (btn == "delete") {
+        let report = await Report.find({Status: "No Feedback"}).lean();
+        response.render("report", {data: report});
+
+    }
+
+
+});
+
+
 app.post('/confirmCoach', async function (request, response) {
     let btn = request.body.btn;
     let _id = request.body.idCoach;
@@ -1039,12 +1098,8 @@ app.post('/matchCoach', async function (request, response) {
             {$and: [{Workplace: place}, {Specialized: specialized}]}
         ]
     });
-    if (user.length > 0) {
-        response.send(user);
-    } else {
-        response.send("Fail");
-    }
-
+    console.log(user);
+    response.send(user);
 
 });
 
@@ -1079,6 +1134,46 @@ app.post("/switchCoach", async function (request, response) {
         response.send("Fail Change");
     }
 
+
+});
+
+app.post("/checkPhoneNo", async function (request, response) {
+
+    let Phone = request.body.Phone
+    let stt = await User.find({Phone: Phone});
+    if (stt.length > 0) {
+        response.send("Have PhoneNo");
+    } else {
+        response.send("No PhoneNo");
+    }
+
+});
+
+app.post("/getInforFromPhone", async function (request, response) {
+    let Phone = request.body.Phone
+    let user = await User.find({Phone: Phone});
+    response.send(user);
+
+});
+
+app.post("/sendReportFromUser", async function (request, response) {
+    let username = request.body.Username;
+    let content = request.body.Content;
+    let detail = request.body.Detail;
+    let token = request.body.Token;
+    let newReport = await new Report({
+        Username: username,
+        Content: content,
+        Detail: detail,
+        Token: token,
+        Status: "No Feedback",
+
+    });
+    let stt = await newReport.save();
+    if (stt) {
+        let report = await Report.find({Status: "No Feedback"}).lean();
+        response.render("report", {data: report});
+    }
 
 });
 

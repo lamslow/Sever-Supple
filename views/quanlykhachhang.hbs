@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href = "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
     <title>Customer</title>
@@ -12,8 +12,9 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" methods="get"  href="sanpham">Trang chủ</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" methods="get" href="sanpham">Trang chủ</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -27,9 +28,12 @@
                     </button>
                     <form action="sanpham" method="get">
                         <div class="dropdown-menu dropdown-menu-lg-right">
-                            <button class="dropdown-item" value="supply" name="sm" type="submit">Thực phẩm hỗ trợ</button>
-                            <button class="dropdown-item" value="equipment" name="sm" type="submit">Dụng cụ tập luyện</button>
-                            <button class="dropdown-item" value="clothes" name="sm" type="submit">Quần áo tập luyện</button>
+                            <button class="dropdown-item" value="supply" name="sm" type="submit">Thực phẩm hỗ trợ
+                            </button>
+                            <button class="dropdown-item" value="equipment" name="sm" type="submit">Dụng cụ tập luyện
+                            </button>
+                            <button class="dropdown-item" value="clothes" name="sm" type="submit">Quần áo tập luyện
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -38,7 +42,8 @@
                 <a class="btn btn-outline-success" href="/qlysanpham">Products Management</a>
             </li>
             <li class="nav-item active  mr-1">
-                <a class="btn btn-outline-success" href="/listcoach" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <a class="btn btn-outline-success" href="/listcoach" id="navbarDropdown" role="button"
+                   aria-haspopup="true" aria-expanded="false">
                     Coach
                 </a>
 
@@ -47,7 +52,8 @@
                 <a class="btn btn-outline-success" href="/qlykhachhang">Customer Management</a>
             </li>
             <li class="nav-item active mr-1">
-                <a class="btn btn-outline-success" href="/listAdmin" tabindex="-1" aria-disabled="true">Administrator Management</a>
+                <a class="btn btn-outline-success" href="/listAdmin" tabindex="-1" aria-disabled="true">Administrator
+                    Management</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -56,92 +62,115 @@
         </form>
     </div>
 </nav>
+<div class="row">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="list-group">
+                <a href="/quantriHLV" class="list-group-item list-group-item-action">
+                    Quản trị HLV
+                </a>
+                <a href="/baocao" class="list-group-item list-group-item-action">
+                    Phản hồi từ khách hàng
+                </a>
+                <a href="/thongke" class="list-group-item list-group-item-action">
+                    Thống kê
+                </a>
 
-<form action="signUpkhachhang" method="post">
+            </div>
+        </div>
+    </div>
     <div class="container">
-        <div class="row justify-content-md-center row-cols-4">
+        <form action="signUpkhachhang" method="post">
+            <div class="container">
+                <div class="row justify-content-md-center row-cols-4">
 
-            <button type="submit" class=" btn btn-success">Thêm Khách Hàng</button>
+                    <button type="submit" class=" btn btn-success">Thêm Khách Hàng</button>
+
+                </div>
+            </div>
+        </form>
+        <div class="container rounded-bottom bg-light ">
+            <br> <br>
+            <table class="table container col-12">
+                <thead>
+                <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">Password</th>
+                    <th scope="col">Fullname</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{textAlert}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{#each data}}
+                    <tr>
+                        <td scope="row" name="user">{{this.Username}}</td>
+                        <td>{{this.Password}}</td>
+                        <td>{{this.Fullname}}</td>
+                        <td>{{this.Phone}}</td>
+                        <td>{{this.Email}}</td>
+                        <td>
+                            <div class="row">
+                                <div class="col-sm-auto">
+                                    <form action="/signUpkhachhang" method="post">
+                                        <div class="form-group" style="display: none">
+                                            <input type="text" name="idKH" value="{{this._id}}" class="form-control">
+                                            <input type="text" name="userKH" value="{{this.Username}}"
+                                                   class="form-control">
+                                            <input type="text" name="passKH" value="{{this.Password}}"
+                                                   class="form-control">
+                                            <input type="text" name="PhoneKH" value="{{this.Phone}}"
+                                                   class="form-control">
+                                            <input type="text" name="EmailKH" value="{{this.Email}}"
+                                                   class="form-control">
+                                            <input type="text" name="AddressKH" value="{{this.Address}}"
+                                                   class="form-control">
+                                            <input type="text" name="FullnameKH" value="{{this.Fullname}}"
+                                                   class="form-control">
+                                        </div>
+
+                                        <button type="submit" name="update" value="2" class="btn btn-info">Sửa</button>
+
+                                    </form>
+                                </div>
+                                <div class="col-sm-auto">
+                                    <form action="delKH" method="get">
+                                        <div class="form-group" style="display: none">
+                                            <input type="text" name="idKH" value="{{this._id}}" class="form-control">
+                                            <input type="text" name="userKH" value="{{this.Username}}"
+                                                   class="form-control">
+                                            <input type="text" name="passKH" value="{{this.Password}}"
+                                                   class="form-control">
+                                        </div>
+                                        <button type="submit" name="del" value="1" class="btn btn-secondary">Xóa
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+            </table>
 
         </div>
     </div>
-</form>
-<div class="container rounded-bottom bg-light ">
-    <br> <br>
-    <table class="table container col-10">
-        <thead>
-        <tr>
-            <th scope="col">Username</th>
-            <th scope="col">Password</th>
-            <th scope="col">Fullname</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Email</th>
-            <th scope="col">Address</th>
-            <th scope="col">Thao tác</th>
-        </tr>
-        </thead>
-        <tbody>
-        <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
-            {{textAlert}}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        {{#each data}}
-            <tr>
-                <td scope="row" name="user">{{this.Username}}</td>
-                <td>{{this.Password}}</td>
-                <td>{{this.Fullname}}</td>
-                <td>{{this.Phone}}</td>
-                <td>{{this.Email}}</td>
-                <td>{{this.Address}}</td>
-                <td>
-                    <div class="row">
-                        <div class="col-sm-auto">
-                            <form action="/signUpkhachhang" method="post">
-                                <div class="form-group" style="display: none">
-                                    <input type="text" name="idKH" value="{{this._id}}" class="form-control">
-                                    <input type="text" name="userKH" value="{{this.Username}}"
-                                           class="form-control">
-                                    <input type="text" name="passKH" value="{{this.Password}}"
-                                           class="form-control">
-                                    <input type="text" name="PhoneKH" value="{{this.Phone}}"
-                                           class="form-control">
-                                    <input type="text" name="EmailKH" value="{{this.Email}}"
-                                           class="form-control">
-                                    <input type="text" name="AddressKH" value="{{this.Address}}"
-                                           class="form-control">
-                                    <input type="text" name="FullnameKH" value="{{this.Fullname}}"
-                                           class="form-control">
-                                </div>
-
-                                <button type="submit" name="update" value="2" class="btn btn-info">Sửa</button>
-
-                            </form>
-                        </div>
-                        <div class="col-sm-auto">
-                            <form action="delKH" method="get">
-                                <div class="form-group" style="display: none">
-                                    <input type="text" name="idKH" value="{{this._id}}" class="form-control">
-                                    <input type="text" name="userKH" value="{{this.Username}}"
-                                           class="form-control">
-                                    <input type="text" name="passKH" value="{{this.Password}}"
-                                           class="form-control">
-                                </div>
-                                <button type="submit" name="del" value="1" class="btn btn-secondary">Xóa</button>
-                            </form>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        {{/each}}
-    </table>
-
 </div>
 
-
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 </body>
 </html>

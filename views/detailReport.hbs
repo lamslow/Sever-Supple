@@ -28,9 +28,12 @@
                     </button>
                     <form action="sanpham" method="get">
                         <div class="dropdown-menu dropdown-menu-lg-right">
-                            <button class="dropdown-item" value="supply" name="sm" type="submit">Thực phẩm hỗ trợ</button>
-                            <button class="dropdown-item" value="equipment" name="sm" type="submit">Dụng cụ tập luyện</button>
-                            <button class="dropdown-item" value="clothes" name="sm" type="submit">Quần áo tập luyện</button>
+                            <button class="dropdown-item" value="supply" name="sm" type="submit">Thực phẩm hỗ trợ
+                            </button>
+                            <button class="dropdown-item" value="equipment" name="sm" type="submit">Dụng cụ tập luyện
+                            </button>
+                            <button class="dropdown-item" value="clothes" name="sm" type="submit">Quần áo tập luyện
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -59,57 +62,42 @@
         </form>
     </div>
 </nav>
-<div class="row">
-    <div class="col-sm-2">
-        <div class="list-group">
-            <a href="/quantriHLV" class="list-group-item list-group-item-action">
-                Quản trị HLV
-            </a>
-            <a href="/baocao" class="list-group-item list-group-item-action">
-                Phản hồi từ khách hàng
-            </a>
-            <a href="/thongke" class="list-group-item list-group-item-action">
-                Thống kê
-            </a>
 
-        </div>
-    </div>
-</div>
 <div class=" rounded-bottom bg-light ">
     <br> <br>
-    <div class=" container col-10">
+    <div class=" container col-12">
         {{#each data}}
-            <div class="col mb-4">
+            <div class="col mb-12 text-center">
                 <div class="text-center">
-                    <img src="../public/{{this.ImageProduct}}" class="img-thumbnail align-content-center"
-                         width="300px"
-                         height="300px"
-                         alt='../public/{{this.ImageProduct}}'>
+                    <h5 class="card-title text-center">{{this.Content}}</h5>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title text-center">{{this.ProductName}}</h5>
-                    <p class="card-text text-center">Giá: {{this.Price}}</p>
                     <div class="card-footer">
-                        <h5>Mô tả</h5>
-                        <p>{{this.Description}}</p>
-                        <h5>Loại</h5>
-                        <p>{{this.Classify}}</p>
-                        <h5>Rating</h5>
-                        <p>{{this.Rating}}</p>
+                        <h5>Thông tin báo cáo</h5>
+                        <p>{{this.Detail}}</p>
                     </div>
                     <br>
                 </div>
             </div>
+            <div class="container rounded-bottom bg-light align-content-center">
+                <div class="col-sm-12  rounded-bottom bg-light ">
+                    <form method="post" class="container col-10 align-content-center" action="sendReport">
+                        <label>Phản hồi khách hàng</label>
+                        <input type="text" name="FeedBack" class=" form-control">
+                        <input name="idReport" class=" form-control"value="{{this._id}}" style="display: none">
+                        <input name="usernameReport" value="{{this.Username}}"  class=" form-control" style="display: none">
+                        <input name="tokenReport" value="{{this.Token}}" class=" form-control" style="display: none">
+                        <br>
+                        <br>
+                        <div class="text-center">
+                            <button class="btn btn-outline-success" type="submit" value="Send" name="sm">Gửi</button>
+                            <button class="btn btn-outline-success" type="submit" value="Cancel" name="sm">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         {{/each}}
     </div>
-</div>
-
-<div class="text-center" style="display: {{style2}}">
-    <form method="post" action="confirmCoach">
-        <button class="btn btn-outline-success" type="submit" value="Confirm" name="sm">Đồng ý</button>
-        <button class="btn btn-outline-success" type="submit" value="Cancel" name="sm">Hủy</button>
-    </form>
-
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
