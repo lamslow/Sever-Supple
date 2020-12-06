@@ -121,6 +121,32 @@ app.listen( process.env.PORT || 1111);
 app.get('/', function (request, response) {
     response.render("login");
 });
+
+app.get('/signUpAdmin', async function (request, response) {
+    let update = request.query.update;
+    console.log(update + '')
+    if (update == 1) {
+        update = 0;
+
+        let idAd = request.query.idAd;
+        let userAd = request.query.userAd;
+        let passAd = request.query.passAd;
+        response.render('signUp', {
+            btnUpdateAd: 'Cập nhật',
+            userAd: userAd,
+            passAd: passAd,
+            idAd: idAd,
+            dsp: 'block'
+        });
+    } else {
+        response.render('addAdmin', {
+            btnUD: 'Xong',
+            dsp: 'block'
+        });
+    }
+
+});//done
+
 app.get('/createAdmin', async function (request, response) {
     let nUserAd = request.query.nUserAd;
     let nPassAd = request.query.nPassAd;
@@ -162,30 +188,7 @@ app.get('/createAdmin', async function (request, response) {
     }
 
 });//done
-app.get('/signUpAdmin', async function (request, response) {
-    let update = request.query.update;
-    console.log(update + '')
-    if (update == 1) {
-        update = 0;
 
-        let idAd = request.query.idAd;
-        let userAd = request.query.userAd;
-        let passAd = request.query.passAd;
-        response.render('signUp', {
-            btnUpdateAd: 'Cập nhật',
-            userAd: userAd,
-            passAd: passAd,
-            idAd: idAd,
-            dsp: 'block'
-        });
-    } else {
-        response.render('addAdmin', {
-            btnUD: 'Xong',
-            dsp: 'block'
-        });
-    }
-
-});//done
 app.get('/login', async function (request, response) {
     let userAdmin = request.query.userAdmin;
     let passwordAdmin = request.query.passwordAdmin;
