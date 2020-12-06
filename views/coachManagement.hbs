@@ -62,6 +62,12 @@
         </form>
     </div>
 </nav>
+<div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{textAlert}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 <div class="row">
     <div class="row">
         <div class="col-sm-12">
@@ -79,15 +85,10 @@
             </div>
         </div>
     </div>
-    <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
-        {{textAlert}}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class=" rounded-bottom bg-light ">
+
+    <div class=" rounded-bottom bg-light col-10">
         <br> <br>
-        <div class=" container col-10">
+        <div class=" container col-12">
             <div class="row row-cols-1 row-cols-md-3">
                 {{#each data}}
                     <div class="col mb-4">
@@ -108,7 +109,8 @@
                                     <div class="card-footer">
 
                                         <div class="form-group" style="display: none">
-                                            <input type="text" name="idCoach" value="{{this._id}}" class="form-control">
+                                            <input type="text" name="idCoach" value="{{this._id}}"
+                                                   class="form-control">
                                             <input type="text" name="nameCoach" value="{{this.CoachName}}"
                                                    class="form-control">
                                             <input type="text" name="usernameCoach" value="{{this.Username}}"
@@ -128,13 +130,15 @@
                                             <input type="text" name="tokenCoach" value="{{this.Token}}"
                                                    class="form-control">
                                         </div>
-                                        <button type="submit" value="confirm" name="btn" class="btn btn-primary col-12">
+                                        <button type="submit" value="confirm" name="btn"
+                                                class="btn btn-primary col-12">
                                             Xác
                                             nhận
                                         </button>
                                         <br><br>
 
-                                        <button type="submit" value="delete" name="btn" class="btn btn-primary col-12">
+                                        <button type="submit" value="delete" name="btn"
+                                                class="btn btn-primary col-12">
                                             Hủy
                                         </button>
 
@@ -148,7 +152,6 @@
         </div>
     </div>
 </div>
-
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>

@@ -948,22 +948,18 @@ app.post('/changePass', async function (request, response) {
 });
 
 
-app.post('/updateProfile', async function (request, response) {
+app.post('/updateProfile', async function (request, response)  {
 
-    let idKH = request.body.nIdKH;
-    let FullnameKH = request.body.Fullname;
-    let PhoneKH = request.body.Phone;
-    let AddressKH = request.body.Address;
-    let EmailKH = request.body.Email;
-    console.log(idKH)
-    let users = await User.find({Fullname: FullnameKH, Phone: PhoneKH, Email: EmailKH, Address: AddressKH}).lean();
-    console.log(users)
+    let id = request.body._id;
+    let fullname = request.body.Fullname;
+    let email = request.body.Email;
+    let sex = request.body.Sex;
+    let users = await User.find({Fullname: fullname,  Email: email,Sex:sex}).lean();
     if (users.length <= 0) {
-        let newUser = await User.findByIdAndUpdate(idKH, {
-            Fullname: FullnameKH,
-            Phone: PhoneKH,
-            Address: AddressKH,
-            Email: EmailKH
+        let newUser = await User.findByIdAndUpdate(id, {
+            Fullname: fullname,
+            Email: email,
+            Sex: sex
         });
         console.log(newUser)
         if (newUser) {

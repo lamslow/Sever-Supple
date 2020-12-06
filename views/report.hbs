@@ -69,8 +69,8 @@
     </button>
 </div>
 <div class="row">
-
-        <div class="col-sm-2">
+    <div class="row">
+        <div class="col-sm-12">
             <div class="list-group">
                 <a href="/quantriHLV" class="list-group-item list-group-item-action">
                     Quản trị HLV
@@ -85,8 +85,8 @@
             </div>
         </div>
     </div>
-    <div class=" rounded-bottom bg-light ">
-        <div class=" container col-sm-8">
+    <div class=" rounded-bottom bg-light col-10">
+        <div class=" container col-sm-12">
             <div class="row row-cols-md-3">
                 {{#each data}}
                     <div class="col mb-4">
@@ -98,8 +98,10 @@
                                 <div class="card-footer">
                                     <form action="detailReport" method="post">
                                         <div class="form-group" style="display: none">
-                                            <input type="text" name="idReport" value="{{this._id}}" class="form-control">
-                                            <input type="text" name="tokenReport" value="{{this.Token}}" class="form-control">
+                                            <input type="text" name="idReport" value="{{this._id}}"
+                                                   class="form-control">
+                                            <input type="text" name="tokenReport" value="{{this.Token}}"
+                                                   class="form-control">
                                         </div>
                                         <button type="submit" value="1" name="btn" class="btn btn-primary col-12">Chi
                                             tiết
@@ -114,8 +116,8 @@
             </div>
         </div>
 
+    </div>
 </div>
-
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>

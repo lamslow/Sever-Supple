@@ -14,9 +14,7 @@ const UserSchema = mongoose.Schema({
     Rating:{type:Number},
     Status:{type:String},
     Type:{type:String},
-    Sex:{type:String},
-    Target:{type:String},
-    Desire:{type:String}
-    // Token:{type:String}
+    Sex:{type:String}
+
 });
 module.exports = UserSchema;
