@@ -118,7 +118,6 @@ app.engine('.hbs', hbs({
 app.set('view engine', '.hbs');
 app.listen( process.env.PORT || 1111);
 app.get('/', function (request, response) {
-
     response.render("login");
 });
 app.get('/createAdmin', async function (request, response) {
