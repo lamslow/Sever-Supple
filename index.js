@@ -116,7 +116,7 @@ app.engine('.hbs', hbs({
 }));
 
 app.set('view engine', '.hbs');
-app.listen(1212);
+app.listen( process.env.PORT || 1212);
 app.get('/', function (request, response) {
 
     response.render("login");
