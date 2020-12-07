@@ -10,6 +10,7 @@ let checkCoachSchema = require('./model/checkCoach');
 let notificationSchema = require('./model/NotificationSchema');
 let reportSchema = require('./model/reportSchema');
 let message = require('firebase-admin')
+
 let serviceAccount = require("./PT Connect-daca5f65cc4a.json");
 message.initializeApp({
     credential: message.credential.cert(serviceAccount),
