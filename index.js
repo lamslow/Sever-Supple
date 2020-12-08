@@ -936,10 +936,14 @@ app.post('/verifyPhoneNo', async function (request, response) {
     let nPhone = request.body.Phone;
     let nEmail = request.body.Email;
     let users = await User.find({Username: nUser}).lean();   //dk
+
     if (users.length <= 0) {
-        let stt = await User.find({Username: nUser, Phone: nPhone, Email: nEmail}).lean();
-        if (stt.length > 0) {
-            response.send("Email hoặc Số điện thoại đã được sử dụng");
+        let phone = await User.find({Phone: nPhone}).lean();   //dk
+        let email = await User.find({Email: nEmail}).lean();   //dk
+        if (phone.length > 0) {
+            response.send("Số điện thoại đã được sử dụng");
+        }else if(email.length > 0){
+            response.send("Email đã được sử dụng");
         } else {
             response.send("Confirm")
         }
