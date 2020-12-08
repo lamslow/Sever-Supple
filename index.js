@@ -116,7 +116,7 @@ app.engine('.hbs', hbs({
 }));
 
 app.set('view engine', '.hbs');
-app.listen( process.env.PORT || 1111);
+app.listen(process.env.PORT || 3000);
 app.get('/', function (request, response) {
 
     response.render("login");
@@ -655,16 +655,62 @@ app.get('/detailCoach', async function (request, response) {
 });
 
 app.get('/thongke', async function (request, response) {
+    let ts = Date.now();
+    let date = new Date().getDate();
+    let dateAfter = new Date().getDate() + 1;
+    let month = new Date(ts).getMonth() + 1;
+    let year = new Date().getFullYear();
+    let date_ob = new Date(ts);
+
+    console.log(year + "-" + month + "-0" + dateAfter);
+    console.log(date_ob);
     let allProduct = await Product.find({}).lean();
     let allUser = await User.find({}).lean();
     let allCart = await Cart.find({}).lean();
     let allCoach = await User.find({Type: "Coach"}).lean();
+    let BoyUser = await User.find({Sex: "Nam"}).lean();
+    let GirlUser = await User.find({Sex: "Nữ"}).lean();
+    let CustomersWaitingApproval = await User.find({Status: "Wating"}).lean();
+    let CustomersNotCoach = await User.find({Status: "None"}).lean();
+    let FeedbackFromCustomers = await Report.find({}).lean();
+    let FeedbackNotResponded = await Report.find({Status: "No Feedback"}).lean();
+    let FeedbackResponded = await Report.find({Status: "Feedbacked"}).lean();
+    let CartInADay = await Cart.find({
+        $and: [
+            {DateCart: {$lte: year + "-" + month + "-0" + dateAfter + "T04:00:00.00"}},
+            {DateCart: {$gte: year + "-" + month + "-0" + date + "T04:00:00.00"}},
+        ]
+    }).lean();
+
+    let CartInMonth = await Cart.find({
+        $and: [
+            {DateCart: {$lte: year + "-" + month + "-31T04:00:00.00"}},
+            {DateCart: {$gte: year + "-" + month + "-01T04:00:00.00"}},
+        ]
+    }).lean();
+
+    // let TotalOrderValue=await Cart.aggregate([{
+    //     $group:{_id:"$_id",sum_Price:{$sum:"$TotalPrice"}}
+    // }]);
+    //
+    // console.log(TotalOrderValue);
+
     response.render("thongke",
         {
+            dateNow: "0" + date + "-" + month + "-" + year,
             allProduct: allProduct.length + "",
             allUser: allUser.length + "",
             allCart: allCart.length + "",
             allCoach: allCoach.length + "",
+            BoyUser: BoyUser.length + "",
+            GirlUser: GirlUser.length + "",
+            CustomersWaitingApproval: CustomersWaitingApproval.length + "",
+            CustomersNotCoach: CustomersNotCoach.length + "",
+            FeedbackFromCustomers: FeedbackFromCustomers.length + "",
+            FeedbackNotResponded: FeedbackNotResponded.length + "",
+            FeedbackResponded: FeedbackResponded.length + "",
+            CartInADay: CartInADay.length + "",
+            CartInMonth: CartInMonth.length + "",
         })
 });
 
@@ -678,7 +724,7 @@ app.get('/quantriHLV', async function (request, response) {
 
 app.get('/baocao', async function (request, response) {
     let report = await Report.find({Status: "No Feedback"}).lean();
-    response.render("report", {data: report,status:"none"});
+    response.render("report", {data: report, status: "none"});
 });
 
 app.post('/detailReport', async function (request, response) {
@@ -724,7 +770,7 @@ app.post('/sendReport', async function (request, response) {
         await newNotiReport.save();
         await Report.findByIdAndUpdate(idReport, {Status: "Feedbacked"});
         let report = await Report.find({Status: "No Feedback"});
-        response.render("report", {data: report,textAlert:"Gửi phản hồi thành công",status:"block"});
+        response.render("report", {data: report, textAlert: "Gửi phản hồi thành công", status: "block"});
 
     } else if (btn == "delete") {
         let report = await Report.find({Status: "No Feedback"}).lean();
@@ -890,10 +936,14 @@ app.post('/verifyPhoneNo', async function (request, response) {
     let nPhone = request.body.Phone;
     let nEmail = request.body.Email;
     let users = await User.find({Username: nUser}).lean();   //dk
+
     if (users.length <= 0) {
-        let stt = await User.find({Phone: nPhone, Email: nEmail}).lean();
-        if (stt.length > 0) {
-            response.send("Email hoặc Số điện thoại đã được sử dụng");
+        let phone = await User.find({Phone: nPhone}).lean();   //dk
+        let email = await User.find({Email: nEmail}).lean();   //dk
+        if (phone.length > 0) {
+            response.send("Số điện thoại đã được sử dụng");
+        }else if(email.length > 0){
+            response.send("Email đã được sử dụng");
         } else {
             response.send("Confirm")
         }
@@ -948,13 +998,13 @@ app.post('/changePass', async function (request, response) {
 });
 
 
-app.post('/updateProfile', async function (request, response)  {
+app.post('/updateProfile', async function (request, response) {
 
     let id = request.body._id;
     let fullname = request.body.Fullname;
     let email = request.body.Email;
     let sex = request.body.Sex;
-    let users = await User.find({Fullname: fullname,  Email: email,Sex:sex}).lean();
+    let users = await User.find({Fullname: fullname, Email: email, Sex: sex}).lean();
     if (users.length <= 0) {
         let newUser = await User.findByIdAndUpdate(id, {
             Fullname: fullname,
