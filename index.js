@@ -937,7 +937,7 @@ app.post('/verifyPhoneNo', async function (request, response) {
     let nEmail = request.body.Email;
     let users = await User.find({Username: nUser}).lean();   //dk
     if (users.length <= 0) {
-        let stt = await User.find({Phone: nPhone, Email: nEmail}).lean();
+        let stt = await User.find({Username: nUser, Phone: nPhone, Email: nEmail}).lean();
         if (stt.length > 0) {
             response.send("Email hoặc Số điện thoại đã được sử dụng");
         } else {
