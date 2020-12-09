@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
-    <title>Customer</title>
+    <title>Administrator</title>
 </head>
 <body>
 
@@ -84,26 +84,16 @@
         </div>
     </div>
     <div class="container">
-        <form action="signUpkhachhang" method="post">
-            <div class="container">
-                <div class="row justify-content-md-center row-cols-4">
-
-                    <button type="submit" class=" btn btn-success">Thêm Khách Hàng</button>
-
-                </div>
-            </div>
-        </form>
         <div class="container rounded-bottom bg-light ">
             <br> <br>
-            <table class="table container col-12">
+            <table class="table container col-sm-12">
                 <thead>
                 <tr>
-                    <th scope="col">Username</th>
-                    <th scope="col">Password</th>
-                    <th scope="col">Fullname</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Thao tác</th>
+                    <th scope="col">Tên người nhận</th>
+                    <th scope="col">Sản phẩm</th>
+                    <th scope="col">Giá trị</th>
+                    <th scope="col">Địa chỉ</th>
+                    <th scope="col">Số điện thoại</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -114,57 +104,17 @@
                     </button>
                 </div>
                 {{#each data}}
-                    <tr>
-                        <td scope="row" name="user">{{this.Username}}</td>
-                        <td>{{this.Password}}</td>
-                        <td>{{this.Fullname}}</td>
-                        <td>{{this.Phone}}</td>
-                        <td>{{this.Email}}</td>
-                        <td>
-                            <div class="row">
-                                <div class="col-sm-auto">
-                                    <form action="/signUpkhachhang" method="post">
-                                        <div class="form-group" style="display: none">
-                                            <input type="text" name="idKH" value="{{this._id}}" class="form-control">
-                                            <input type="text" name="userKH" value="{{this.Username}}"
-                                                   class="form-control">
-                                            <input type="text" name="passKH" value="{{this.Password}}"
-                                                   class="form-control">
-                                            <input type="text" name="PhoneKH" value="{{this.Phone}}"
-                                                   class="form-control">
-                                            <input type="text" name="EmailKH" value="{{this.Email}}"
-                                                   class="form-control">
-                                            <input type="text" name="AddressKH" value="{{this.Address}}"
-                                                   class="form-control">
-                                            <input type="text" name="FullnameKH" value="{{this.Fullname}}"
-                                                   class="form-control">
-                                        </div>
-
-                                        <button type="submit" name="update" value="2" class="btn btn-info">Sửa</button>
-
-                                    </form>
-                                </div>
-                                <div class="col-sm-auto">
-                                    <form action="delKH" method="post">
-                                        <div class="form-group" style="display: none">
-                                            <input type="text" name="idKH" value="{{this._id}}" class="form-control">
-                                            <input type="text" name="userKH" value="{{this.Username}}"
-                                                   class="form-control">
-                                            <input type="text" name="passKH" value="{{this.Password}}"
-                                                   class="form-control">
-                                        </div>
-                                        <button type="submit" name="del" value="1" class="btn btn-secondary">Xóa
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+<!--                    <tr>-->
+<!--                        <th scope="row">{{this._id}}</th>-->
+<!--                        <td name="user">{{this.ReceivingAddress}}</td>-->
+<!--                        <td>{{this.passwordAdmin}}</td>-->
+<!--                    </tr>-->
                 {{/each}}
             </table>
-
         </div>
     </div>
+
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

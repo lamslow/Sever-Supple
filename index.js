@@ -122,8 +122,15 @@ app.get('/', function (request, response) {
     response.render("login");
 });
 app.get('/createAdmin', async function (request, response) {
-    let nUserAd = request.query.nUserAd;
-    let nPassAd = request.query.nPassAd;
+    let nnUserAd = await Administrator.find({}).lean();
+    response.render('listAdministrator', {
+        data: nnUserAd,
+        status: 'none',
+    });
+})
+app.post('/createAdmin', async function (request, response) {
+    let nUserAd = request.body.nUserAd;
+    let nPassAd = request.body.nPassAd;
     if (nUserAd && nPassAd) {
         let administrator = await Administrator.find({userAdmin: nUserAd}).lean();   //dk
         if (administrator.length <= 0) {
@@ -162,15 +169,15 @@ app.get('/createAdmin', async function (request, response) {
     }
 
 });//done
-app.get('/signUpAdmin', async function (request, response) {
-    let update = request.query.update;
+app.post('/signUpAdmin', async function (request, response) {
+    let update = request.body.update;
     console.log(update + '')
     if (update == 1) {
         update = 0;
 
-        let idAd = request.query.idAd;
-        let userAd = request.query.userAd;
-        let passAd = request.query.passAd;
+        let idAd = request.body.idAd;
+        let userAd = request.body.userAd;
+        let passAd = request.body.passAd;
         response.render('signUp', {
             btnUpdateAd: 'Cập nhật',
             userAd: userAd,
@@ -251,8 +258,8 @@ app.get('/updateAdmin', async function (request, response) {
         });
     }
 });//done
-app.get('/delAdmin', async function (request, response) {
-    let idAd = request.query.idAd;
+app.post('/delAdmin', async function (request, response) {
+    let idAd = request.body.idAd;
     console.log(idAd + "del kh");
 
     let status = await Administrator.findByIdAndDelete(idAd);
@@ -362,21 +369,21 @@ app.post('/uploadProduct', (request, response) => {
 });
 
 
-app.get('/updatesanpham', async function (request, response) {
+app.post('/updatesanpham', async function (request, response) {
 
-    let update = request.query.update;
+    let update = request.body.update;
     console.log(update + '')
     if (update == 1) {
         update = 0;
 
-        let idSP = request.query.idSP;
-        let imageSP = request.query.exImage;
-        let nameSP = request.query.nameSP;
-        let priceSP = request.query.priceSP;
-        let descriptionSP = request.query.descriptionSP;
-        let classifySP = request.query.classifySP;
-        let slSP = request.query.slSP;
-        let rateSP = request.query.rateSP;
+        let idSP = request.body.idSP;
+        let imageSP = request.body.exImage;
+        let nameSP = request.body.nameSP;
+        let priceSP = request.body.priceSP;
+        let descriptionSP = request.body.descriptionSP;
+        let classifySP = request.body.classifySP;
+        let slSP = request.body.slSP;
+        let rateSP = request.body.rateSP;
 
 
         response.render('updatesanpham', {
@@ -398,14 +405,22 @@ app.get('/updatesanpham', async function (request, response) {
 
 });
 app.get('/updateSPdone', async function (request, response) {
-    let nId = request.query.nId;
-    let nameSP = request.query.nameSP;
-    let priceSP = request.query.priceSP;
-    let exImage = request.query.exImage;
-    let descriptionSP = request.query.descriptionSP;
-    let classifySP = request.query.classifySP;
-    let slSP = request.query.slSP;
-    let rateSP = request.query.rateSP;
+    let nProduct = await Product.find({}).lean();
+    response.render('qlysanpham', {
+        data: nProduct,
+        status: 'none',
+        textAlert: 'Cập nhật sản phẩm thành công.'
+    });
+})
+app.post('/updateSPdone', async function (request, response) {
+    let nId = request.body.nId;
+    let nameSP = request.body.nameSP;
+    let priceSP = request.body.priceSP;
+    let exImage = request.body.exImage;
+    let descriptionSP = request.body.descriptionSP;
+    let classifySP = request.body.classifySP;
+    let slSP = request.body.slSP;
+    let rateSP = request.body.rateSP;
 
     let products = await Product.find({
         ProductName: nameSP,
@@ -451,8 +466,15 @@ app.get('/updateSPdone', async function (request, response) {
     }
 });
 app.get('/delsanpham', async function (request, response) {
+    let nProduct = await Product.find({}).lean();
+    response.render('qlysanpham', {
+        data: nProduct,
+        status: 'none',
+    });
+})
+app.post('/delsanpham', async function (request, response) {
 
-    let idSP = request.query.idSP;
+    let idSP = request.body.idSP;
     console.log(idSP + "del Sp");
 
     let status = await Product.findByIdAndDelete(idSP);
@@ -477,6 +499,14 @@ app.get('/qlykhachhang', async function (request, response) {
     response.render('quanlykhachhang', {data: users, status: 'none'});
 
 });
+app.get('/createkhachhang', async function (request, response) {
+    let nnUser = await User.find({}).lean();
+    response.render('quanlykhachhang', {
+        data: nnUser,
+        status: 'none',
+    });
+})
+
 app.post('/createkhachhang', async function (request, response) {
     let nUser = request.body.nUser;
     let nPass = request.body.nPass;
@@ -526,7 +556,14 @@ app.post('/createkhachhang', async function (request, response) {
     }
 
 });
+app.get('/signUpkhachhang', async function (request, response) {
+    response.render('addKhachHang', {
+        btnUD: 'Xong',
+        dsp: 'block'
+    });
 
+
+})
 app.post('/signUpkhachhang', async function (request, response) {
     let update = request.body.update;
     console.log(update + '')
@@ -560,6 +597,13 @@ app.post('/signUpkhachhang', async function (request, response) {
     }
 
 });
+app.get('/updateKH', async function (request, response) {
+    let nUsers = await User.find({}).lean();
+    response.render('quanlykhachhang', {
+        data: nUsers,
+        status: 'none',
+    });
+})
 app.post('/updateKH', async function (request, response) {
 
     let idKH = request.body.nIdKH;
@@ -609,7 +653,14 @@ app.post('/updateKH', async function (request, response) {
     }
 });
 app.get('/delKH', async function (request, response) {
-    let idKH = request.query.idKH;
+    let nUsers = await User.find({}).lean();
+    response.render('quanlykhachhang', {
+        data: nUsers,
+        status: 'none',
+    });
+})
+app.post('/delKH', async function (request, response) {
+    let idKH = request.body.idKH;
 
 
     let status = await User.findByIdAndDelete(idKH);
@@ -628,7 +679,6 @@ app.get('/delKH', async function (request, response) {
         });
     }
 });
-
 
 app.get('/listcoach', async function (request, response) {
 
@@ -661,7 +711,7 @@ app.get('/thongke', async function (request, response) {
     let month = new Date(ts).getMonth() + 1;
     let year = new Date().getFullYear();
     let date_ob = new Date(ts);
-
+    let CartInADay;
     console.log(year + "-" + month + "-0" + dateAfter);
     console.log(date_ob);
     let allProduct = await Product.find({}).lean();
@@ -675,17 +725,34 @@ app.get('/thongke', async function (request, response) {
     let FeedbackFromCustomers = await Report.find({}).lean();
     let FeedbackNotResponded = await Report.find({Status: "No Feedback"}).lean();
     let FeedbackResponded = await Report.find({Status: "Feedbacked"}).lean();
-    let CartInADay = await Cart.find({
-        $and: [
-            {DateCart: {$lte: year + "-" + month + "-0" + dateAfter + "T04:00:00.00"}},
-            {DateCart: {$gte: year + "-" + month + "-0" + date + "T04:00:00.00"}},
-        ]
-    }).lean();
+    if (date<9){
+         CartInADay = await Cart.find({
+            $and: [
+                {DateCart: {$lte: year + "-" + month + "-0" + dateAfter + "T04:00:00.00"}},
+                {DateCart: {$gte: year + "-" + month + "-0" + date + "T04:00:00.00"}},
+            ]
+        }).lean();
+    }else if (date==9){
+         CartInADay = await Cart.find({
+            $and: [
+                {DateCart: {$lte: year + "-" + month + "-" + dateAfter + "T04:00:00.00"}},
+                {DateCart: {$gte: year + "-" + month + "-0" + date + "T04:00:00.00"}},
+            ]
+        }).lean();
+    } else {
+         CartInADay = await Cart.find({
+            $and: [
+                {DateCart: {$lte: year + "-" + month + "-" + dateAfter + "T04:00:00.00"}},
+                {DateCart: {$gte: year + "-" + month + "-" + date + "T04:00:00.00"}},
+            ]
+        }).lean();
+    }
+
 
     let CartInMonth = await Cart.find({
         $and: [
-            {DateCart: {$lte: year + "-" + month + "-31T04:00:00.00"}},
-            {DateCart: {$gte: year + "-" + month + "-01T04:00:00.00"}},
+            {DateCart: {$lte: year + "-" + month + "-31T02:00:00.00"}},
+            {DateCart: {$gte: year + "-" + month + "-01T02:00:00.00"}},
         ]
     }).lean();
 
@@ -732,7 +799,10 @@ app.post('/detailReport', async function (request, response) {
     let report = await Report.find({_id: id}).lean();
     response.render("detailReport", {data: report});
 });
-
+app.get('/sendReport', async function (reqquest, response) {
+    let report = await Report.find({Status: "No Feedback"});
+    response.render("report", {data: report, status: "none"});
+});
 app.post('/sendReport', async function (request, response) {
 
     let btn = request.body.sm;
@@ -781,7 +851,10 @@ app.post('/sendReport', async function (request, response) {
 
 });
 
-
+app.get("/confirmCoach", async function (request, response) {
+    let newCoach = await CheckCoach.find({}).lean();
+    response.render("coachManagement", {data: newCoach, status: "none"})
+})
 app.post('/confirmCoach', async function (request, response) {
     let btn = request.body.btn;
     let _id = request.body.idCoach;
@@ -875,6 +948,11 @@ app.post('/confirmCoach', async function (request, response) {
 
 
 });
+
+app.get('/listOrder',async function (request,response){
+    let order=await Cart.find({}).lean();
+    response.render('listOrder',{data:order,status:"none"})
+})
 // api for App
 
 app.get('/getUser', async function (request, response) {
@@ -942,7 +1020,7 @@ app.post('/verifyPhoneNo', async function (request, response) {
         let email = await User.find({Email: nEmail}).lean();   //dk
         if (phone.length > 0) {
             response.send("Số điện thoại đã được sử dụng");
-        }else if(email.length > 0){
+        } else if (email.length > 0) {
             response.send("Email đã được sử dụng");
         } else {
             response.send("Confirm")
