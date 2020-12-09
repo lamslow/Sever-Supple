@@ -6,15 +6,15 @@ const UserSchema = mongoose.Schema({
     Phone: {type: String},
     Email: {type: String},
     Address: {type: String},
-    ImageProfile:{type:String},
+    ImageProfile: {type: String},
     Workplace: {type: String},
-    Background:{type:String},
-    Age:{type:Number},
-    Specialized:{type:Array},
-    Rating:{type:Number},
-    Status:{type:String},
-    Type:{type:String},
-    Sex:{type:String}
+    Background: {type: String},
+    Age: {type: Number},
+    Specialized: {type: Array},
+    Rating: {type: Number},
+    Status: {type: String},
+    Type: {type: String},
+    Sex: {type: String}
 
 });
 module.exports = UserSchema;
