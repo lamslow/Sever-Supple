@@ -106,7 +106,7 @@
                 <td>{{this.Quantity}}</td>
                 <td>
 
-                    <form action="/updatesanpham" method="get">
+                    <form action="/updatesanpham" method="post">
                         <div class="form-group" style="display: none">
                             <input type="text" name="idSP" value="{{this._id}}" class="form-control">
                             <input type="text" name="imageSP" value="{{this.ImageProduct}}" class="form-control">
@@ -121,7 +121,7 @@
                         <button type="submit" name="update" value="1" class="btn btn-warning">Sửa</button>
 
                     </form>
-                    <form action="delsanpham" method="get">
+                    <form action="delsanpham" method="post">
                         <div class="form-group" style="display: none">
                             <input type="text" name="idSP" value="{{this._id}}" class="form-control">
                         </div>

@@ -115,7 +115,7 @@
                         <td>
                             <div class="row">
                                 <div class="col-sm-auto">
-                                    <form action="/signUpAdmin" method="get">
+                                    <form action="/signUpAdmin" method="post">
                                         <div class="form-group" style="display: none">
                                             <input type="text" name="idAd" value="{{this._id}}" class="form-control">
                                             <input type="text" name="userAd" value="{{this.userAdmin}}"
@@ -130,7 +130,7 @@
                                     </form>
                                 </div>
                                 <div class="col-sm-auto">
-                                    <form action="delAdmin" method="get">
+                                    <form action="delAdmin" method="post">
                                         <div class="form-group" style="display: none">
                                             <input type="text" name="idAd" value="{{this._id}}" class="form-control">
                                             <input type="text" name="userAd" value="{{this.username}}"

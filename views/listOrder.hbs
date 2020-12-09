@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
-    <title>Product</title>
+    <title>Administrator</title>
 </head>
 <body>
 
@@ -55,10 +55,6 @@
                 <a class="btn btn-outline-success" href="/listAdmin" tabindex="-1" aria-disabled="true">Administrator
                     Management</a>
             </li>
-            <li class="nav-item active mr-1">
-                <a class="btn btn-outline-success" href="/listOrder" tabindex="-1" aria-disabled="true">Order
-                    Management</a>
-            </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -83,38 +79,48 @@
             </div>
         </div>
     </div>
-    <div class=" rounded-bottom bg-light ">
-        <div class=" container col-8">
-            <div class="row row-cols-1 row-cols-md-3">
-                {{#each data}}
-                    <div class="col mb-4">
-                        <div class="card">
-                            <img src="../public/{{this.ImageProduct}}" class="card-img-top" width="100px" height="200px"
-                                 alt='../public/{{this.ImageProduct}}'>
-                            <div class="card-body">
-                                <h5 class="card-title">{{this.ProductName}}</h5>
-                                <p class="card-text">Loại sản phẩm:  {{this.Classify}}</p>
-                                <p class="">Giá:  {{this.Price}} VNĐ</p>
-                                <div class="card-footer">
-                                    <form action="detailProduct" method="get">
-                                        <div class="form-group" style="display: none">
-                                            <input type="text" name="idSP" value="{{this._id}}" class="form-control">
-                                        </div>
-                                        <button type="submit" value="1" name="btn" class="btn btn-primary col-12">Chi
-                                            tiết
-                                        </button>
-                                    </form>
+    <div class="container">
+        <form action="signUpAdmin" method="get">
+            <div class="container">
+                <div class="row justify-content-md-center row-cols-4">
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {{/each}}
+                    <button type="submit" class=" btn btn-success">Thêm QTV</button>
+
+                </div>
             </div>
+        </form>
+        <div class="container rounded-bottom bg-light ">
+            <br> <br>
+            <table class="table container col-sm-12">
+                <thead>
+                <tr>
+                    <th scope="col">Tên người nhận</th>
+                    <th scope="col">Sản phẩm</th>
+                    <th scope="col">Giá trị</th>
+                    <th scope="col">Địa chỉ</th>
+                    <th scope="col">Số điện thoại</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{textAlert}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{#each data}}
+<!--                    <tr>-->
+<!--                        <th scope="row">{{this._id}}</th>-->
+<!--                        <td name="user">{{this.ReceivingAddress}}</td>-->
+<!--                        <td>{{this.passwordAdmin}}</td>-->
+<!--                    </tr>-->
+                {{/each}}
+            </table>
         </div>
     </div>
-</div>
 
+
+</div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
