@@ -84,16 +84,16 @@
     </div>
     <div class=" rounded-bottom bg-light ">
         <br> <br>
-        <div class=" container col-10">
-            <div class="row row-cols-1 row-cols-md-3">
+        <div class=" container col-11">
+            <div class="row row-cols-1 row-cols-md-4">
                 {{#each data}}
-                    <div class="col mb-4">
+                    <div class="col mb-12">
                         <div class="card">
-                            <img src="../public/{{this.ImageProfile}}" class="card-img-top" width="100px" height="200px"
+                            <img src="../public/{{this.ImageProfile}}" class="card-img-top" width="" height="220px"
                                  alt='../public/{{this.ImageProfile}}'>
 
                             <div class="card-body">
-                                <h5 class="card-title text-center">{{this.Fullname}} - {{this.Age}} tuổi</h5>
+                                <h5 class="card-title text-center" >{{this.Fullname}} - {{this.Age}} tuổi</h5>
                                 <p class="card-text">Chuyên ngành: {{this.Specialized}}</p>
                                 <div class="card-footer">
                                     <form action="detailCoach" method="get">
