@@ -116,7 +116,7 @@ app.engine('.hbs', hbs({
 }));
 
 app.set('view engine', '.hbs');
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3002);
 app.get('/', function (request, response) {
 
     response.render("login");
@@ -167,7 +167,7 @@ app.post('/createAdmin', async function (request, response) {
             status: 'none',
         });
     }
-
+t
 });//done
 app.post('/signUpAdmin', async function (request, response) {
     let update = request.body.update;
@@ -755,16 +755,9 @@ app.get('/thongke', async function (request, response) {
             {DateCart: {$gte: year + "-" + month + "-01T02:00:00.00"}},
         ]
     }).lean();
-
-    // let TotalOrderValue=await Cart.aggregate([{
-    //     $group:{_id:"$_id",sum_Price:{$sum:"$TotalPrice"}}
-    // }]);
-    //
-    // console.log(TotalOrderValue);
-
     response.render("thongke",
         {
-            dateNow: "0" + date + "-" + month + "-" + year,
+            dateNow:date + "-" + month + "-" + year,
             allProduct: allProduct.length + "",
             allUser: allUser.length + "",
             allCart: allCart.length + "",
