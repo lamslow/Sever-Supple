@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
+    <link href="public/sanpham.css" rel="stylesheet">
     <title>Product</title>
 </head>
 <body>
+
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" methods="get" href="sanpham">Trang chủ</a>
@@ -83,37 +85,75 @@
             </div>
         </div>
     </div>
-    <div class=" rounded-bottom bg-light ">
-        <div class=" container col-8">
+
+    <div class="col-sm-10 bg-light">
+        <div class="container col-10">
             <div class="row row-cols-1 row-cols-md-3">
                 {{#each data}}
+
+                    <!--                    <div class="col mb-4">-->
+                    <!--                        <div class="card">-->
+                    <!--                            <img src="../public/{{this.ImageProduct}}" class="card-img-top" width="100px" height="300px"-->
+                    <!--                                 alt='../public/{{this.ImageProduct}}'>-->
+                    <!--                            <div class="card-body">-->
+                    <!--                                <h5 class="card-title">{{this.ProductName}}</h5>-->
+                    <!--                                <p class="card-text">Loại sản phẩm:  {{this.Classify}}</p>-->
+                    <!--                                <p class="">Giá:  {{number this.Price}} VNĐ</p>-->
+                    <!--                                <div class="card-footer">-->
+                    <!--                                    <form action="detailProduct" method="get">-->
+                    <!--                                        <div class="form-group" style="display: none">-->
+                    <!--                                            <input type="text" name="idSP" value="{{this._id}}" class="form-control">-->
+                    <!--                                        </div>-->
+                    <!--                                        <button type="submit" value="1" name="btn" class="btn btn-primary col-12">Chi-->
+                    <!--                                            tiết-->
+                    <!--                                        </button>-->
+                    <!--                                    </form>-->
+
+                    <!--                                </div>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+
+
                     <div class="col mb-4">
-                        <div class="card">
-                            <img src="../public/{{this.ImageProduct}}" class="card-img-top" width="100px" height="200px"
-                                 alt='../public/{{this.ImageProduct}}'>
-                            <div class="card-body">
-                                <h5 class="card-title">{{this.ProductName}}</h5>
-                                <p class="card-text">Loại sản phẩm:  {{this.Classify}}</p>
-                                <p class="">Giá:  {{this.Price}} VNĐ</p>
-                                <div class="card-footer">
-                                    <form action="detailProduct" method="get">
-                                        <div class="form-group" style="display: none">
-                                            <input type="text" name="idSP" value="{{this._id}}" class="form-control">
-                                        </div>
-                                        <button type="submit" value="1" name="btn" class="btn btn-primary col-12">Chi
-                                            tiết
-                                        </button>
-                                    </form>
+                        <article style="width: 300px">
+                            <section class="imgbox">
+                                <img src="../public/{{this.ImageProduct}}" class="card-img-top" width="100px"
+                                     height="200px"
+                                     alt='../public/{{this.ImageProduct}}'>
+                            </section>
+                            <section class="details2">
+                                <div style="text-align: center;">
+                                    <div style="white-space: nowrap; overflow: hidden;
+                                        text-overflow: ellipsis; font-size: 18px; font-weight: bold">{{this.ProductName}}</div>
+                                    <h5 class="price" style="display: inline-block; margin-top: 15px"
+                                        id="price">{{number this.Price}} VND</h5>
 
                                 </div>
-                            </div>
-                        </div>
+                                <label style="margin-top: 20px; font-size: 18px">Thể loại: {{this.Classify}}</label>
+                                <form action="detailProduct" method="get">
+                                    <div class="form-group" style="display: none">
+                                        <input type="text" name="idSP" value="{{this._id}}" class="form-control">
+                                    </div>
+
+                                    <button class="cart" type="submit" value="1" name="btn">Chi
+                                        tiết
+                                    </button>
+                                </form>
+
+                            </section>
+                        </article>
                     </div>
+
+
+
                 {{/each}}
+
             </div>
         </div>
     </div>
 </div>
+
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

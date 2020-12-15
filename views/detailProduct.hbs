@@ -78,12 +78,11 @@
 
         </div>
     </div>
-</div>
-<div class=" rounded-bottom bg-light ">
-    <br> <br>
+
+<div class="col-sm-10 bg-light">
     <div class=" container col-10">
         {{#each data}}
-            <div class="col mb-4">
+            <div class="col mb-4" style="margin-top: 25px">
                 <div class="text-center">
                     <img src="../public/{{this.ImageProduct}}" class="img-thumbnail align-content-center"
                          width="300px"
@@ -107,7 +106,7 @@
         {{/each}}
     </div>
 </div>
-
+</div>
 <div class="text-center" style="display: {{style2}}">
     <form method="post" action="confirmCoach">
         <button class="btn btn-outline-success" type="submit" value="Confirm" name="sm">Đồng ý</button>

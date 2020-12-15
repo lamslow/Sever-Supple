@@ -104,11 +104,21 @@
                     </button>
                 </div>
                 {{#each data}}
-<!--                    <tr>-->
-<!--                        <th scope="row">{{this._id}}</th>-->
-<!--                        <td name="user">{{this.ReceivingAddress}}</td>-->
-<!--                        <td>{{this.passwordAdmin}}</td>-->
-<!--                    </tr>-->
+
+                    <tr>
+                        <td scope="row" width="200px">{{this.Recipients}}</td>
+
+
+                        <td scope="row" id="products">
+                    {{#each this.Cart}}
+                        {{Name}} x {{Quantity}}<br>
+                    {{/each}}
+                        </td>
+
+                        <td scope="row" width="150px">{{number this.TotalPrice}} VND</td>
+                        <td name="row">{{this.ReceivingAddress}}</td>
+                        <td name="row">{{this.Phone}}</td>
+                    </tr>
                 {{/each}}
             </table>
         </div>
@@ -116,6 +126,7 @@
 
 
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

@@ -1,7 +1,10 @@
 let express = require('express');
 let hbs = require('express-handlebars');
 let db = require('mongoose');
-let fs = require('fs')
+let fs = require('fs');
+let Handlebars = require('handlebars');
+let NumeralHelper = require("handlebars.numeral");
+NumeralHelper.registerHelpers(Handlebars);
 let userSchema = require('./model/userSchema');
 let productSchema = require('./model/productSchema');
 let AdministratorSchema = require('./model/AdministratorSchema');
@@ -117,10 +120,45 @@ app.engine('.hbs', hbs({
 
 app.set('view engine', '.hbs');
 app.listen(process.env.PORT || 3002);
-app.get('/', function (request, response) {
 
-    response.render("login");
+app.get('/', function (request, response) {
+    response.render("test", {status: 'none', status2: "none", animate:"animate"});
 });
+
+function formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
+    try {
+        decimalCount = Math.abs(decimalCount);
+        decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+        const negativeSign = amount < 0 ? "-" : "";
+
+        let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+        let j = (i.length > 3) ? i.length % 3 : 0;
+
+        return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands);
+    } catch (e) {
+        console.log(e)
+    }
+};
+
+
+app.get('/gioithieu', function (request, response) {
+    response.render("gioithieu");
+});
+
+app.get('/dichvu', function (request, response) {
+    response.render("dichvu");
+});
+
+app.get('/hotro', function (request, response) {
+    response.render("hotro");
+});
+
+app.get('/lienhe', function (request, response) {
+    response.render("lienhe");
+});
+
+
 app.get('/createAdmin', async function (request, response) {
     let nnUserAd = await Administrator.find({}).lean();
     response.render('listAdministrator', {
@@ -167,8 +205,8 @@ app.post('/createAdmin', async function (request, response) {
             status: 'none',
         });
     }
-t
 });//done
+
 app.post('/signUpAdmin', async function (request, response) {
     let update = request.body.update;
     console.log(update + '')
@@ -193,31 +231,7 @@ app.post('/signUpAdmin', async function (request, response) {
     }
 
 });//done
-app.get('/login', async function (request, response) {
-    let userAdmin = request.query.userAdmin;
-    let passwordAdmin = request.query.passwordAdmin;
-    let sm = request.query.sm;
 
-    if (sm == 1) {
-        nameDN = user;
-        console.log(user + " " + sm);
-    }
-
-    let administrator = await Administrator.find({userAdmin: userAdmin, passwordAdmin: passwordAdmin}).lean();   //dk
-
-    if (administrator.length <= 0 && sm == 1) {
-        response.rsender('login', {
-            status: 'block',
-            data: 'Không thể đăng nhập, kiểm tra lại tài khoản và mật khẩu của bạn.',
-            user: '',
-            pass: ''
-        });
-    } else {
-        response.render('sanpham');
-    }
-
-
-});//done
 app.get('/listAdmin', async function (request, response) {
     let administrator = await Administrator.find({}).lean();
     response.render('listAdministrator', {data: administrator, status: 'none'});
@@ -281,6 +295,7 @@ app.post('/delAdmin', async function (request, response) {
 
 app.get('/sanpham', async function (request, response) {
     let sm = request.query.sm;
+
     if (sm == "supply") {
         let products = await Product.find({Classify: "supply"}).lean();
         response.render('sanpham', {data: products});
@@ -297,6 +312,29 @@ app.get('/sanpham', async function (request, response) {
 
 
 });//done
+
+app.post('/sanpham', async function (request, response) {
+    let userAdmin = request.body.userAdmin;
+    let passwordAdmin = request.body.passwordAdmin;
+    let sm = request.body.sm;
+    let administrator = await Administrator.find({userAdmin: userAdmin, passwordAdmin: passwordAdmin}).lean();   //dk
+
+    if (administrator.length <= 0 && sm==1) {
+
+        response.render('test', {
+            status: 'block',
+            status2: 'block',
+            data: 'Không thể đăng nhập, kiểm tra lại tài khoản và mật khẩu của bạn.',
+            user: '',
+            pass: ''
+        });
+
+    } else {
+        let products = await Product.find({}).lean();
+        response.render('sanpham', {data: products});
+    }
+});
+
 
 app.get('/qlysanpham', async function (request, response) {
     let products = await Product.find({}).lean();
@@ -942,9 +980,10 @@ app.post('/confirmCoach', async function (request, response) {
 
 });
 
-app.get('/listOrder',async function (request,response){
-    let order=await Cart.find({}).lean();
-    response.render('listOrder',{data:order,status:"none"})
+app.get('/listOrder', async function (request, response) {
+    let order = await Cart.find({}).lean();
+    response.render('listOrder', {data: order, status: "none"})
+
 })
 // api for App
 
@@ -998,8 +1037,6 @@ app.post('/signUpUser', async function (request, response) {
         console.log(status)
         response.send("Create Account Failure");
     }
-
-
 });
 
 app.post('/verifyPhoneNo', async function (request, response) {
