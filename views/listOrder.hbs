@@ -60,18 +60,20 @@
                     Management</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+<!--        <form class="form-inline my-2 my-lg-0">-->
+<!--            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
+<!--            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+<!--        </form>-->
+        <a class="btn btn-outline-success" href="/" tabindex="-1" aria-disabled="true">Đăng xuất</a>
     </div>
 </nav>
+
 <div class="row">
     <div class="row">
         <div class="col-sm-12">
             <div class="list-group">
                 <a href="/quantriHLV" class="list-group-item list-group-item-action">
-                    Quản trị HLV
+                    Duyệt hồ sơ HLV
                 </a>
                 <a href="/baocao" class="list-group-item list-group-item-action">
                     Phản hồi từ khách hàng
@@ -89,11 +91,14 @@
             <table class="table container col-sm-12">
                 <thead>
                 <tr>
+<!--                    <th scope="col">_id</th>-->
+                    <th scope="col">Thời gian</th>
                     <th scope="col">Tên người nhận</th>
-                    <th scope="col">Sản phẩm</th>
+                    <th scope="col">Sản phẩm<br> Số lượng x Giá</th>
                     <th scope="col">Giá trị</th>
                     <th scope="col">Địa chỉ</th>
                     <th scope="col">Số điện thoại</th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -106,24 +111,32 @@
                 {{#each data}}
 
                     <tr>
-                        <td scope="row" width="200px">{{this.Recipients}}</td>
+                        <form action="deleteOrder" method="post">
+                            <td name="row" style="display:none">
+                             <input style="white-space: nowrap; overflow: hidden;
+                                text-overflow: ellipsis; width: 75px;" type="text" class="form-control" name="idOrder" value="{{this._id}}">
+                            </td>
+                            <td name="row" width="150px">{{this.DateCart}}</td>
+                            <td scope="row" width="200px">{{this.Recipients}}</td>
+                            <td scope="row" id="products">
+                                {{#each this.Cart}}
+                                    <p style="width: 150px;">{{Name}} <br><b>{{Quantity}}</b> x <b style="color: red">{{number Price}}
+                                        VND </b></p>
+                                {{/each}}
+                            </td>
+                            <td scope="row" width="150px"><b style="color: red">{{number this.TotalPrice}} VND</b></td>
+                            <td name="row" width="200px">{{this.ReceivingAddress}}</td>
+                            <td name="row">{{this.Phone}}</td>
 
-
-                        <td scope="row" id="products">
-                    {{#each this.Cart}}
-                        {{Name}} x {{Quantity}}<br>
-                    {{/each}}
-                        </td>
-
-                        <td scope="row" width="150px">{{number this.TotalPrice}} VND</td>
-                        <td name="row">{{this.ReceivingAddress}}</td>
-                        <td name="row">{{this.Phone}}</td>
+                            <td name="row"> <button type="submit" name="del" value="1" style="border: none; background: none"><img
+                                    src="public/delete.png" width="30px" height="30px"></button></td>
+                        </form>
                     </tr>
+
                 {{/each}}
             </table>
         </div>
     </div>
-
 
 
 </div>

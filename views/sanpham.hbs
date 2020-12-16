@@ -8,6 +8,7 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
     <link href="public/sanpham.css" rel="stylesheet">
+    <link href="../public/lienhe.css" rel="stylesheet">
     <title>Product</title>
 </head>
 <body>
@@ -62,18 +63,45 @@
                     Management</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+<!--        <form class="form-inline my-2 my-lg-0">-->
+<!--            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
+<!--            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+<!--        </form>-->
+        <a class="btn btn-outline-success" href="/" tabindex="-1" aria-disabled="true">Đăng xuất</a>
     </div>
 </nav>
+
+
+    <div id="id01" class="modal" style="display: {{status}};">
+
+        <p style="color: white; text-align: center;height: 100px; border: solid 3px darkblue;  border-radius: 20px; background: #3b5998; margin-right: 600px; margin-left: 600px; margin-top: 300px; padding-top: 25px; font-size: 25px">Xin chào {{userAdmin}} !</p>
+
+    </div>
+<script>
+
+    // Get the modal
+    let modal = document.getElementById('id01');
+
+    setTimeout(function(){
+                modal.style.display = "none";
+        },
+            3000);
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
 <div class="row">
     <div class="row">
         <div class="col-sm-12">
             <div class="list-group">
                 <a href="/quantriHLV" class="list-group-item list-group-item-action">
-                    Quản trị HLV
+                    Duyệt hồ sơ HLV
                 </a>
                 <a href="/baocao" class="list-group-item list-group-item-action">
                     Phản hồi từ khách hàng
@@ -90,31 +118,6 @@
         <div class="container col-10">
             <div class="row row-cols-1 row-cols-md-3">
                 {{#each data}}
-
-                    <!--                    <div class="col mb-4">-->
-                    <!--                        <div class="card">-->
-                    <!--                            <img src="../public/{{this.ImageProduct}}" class="card-img-top" width="100px" height="300px"-->
-                    <!--                                 alt='../public/{{this.ImageProduct}}'>-->
-                    <!--                            <div class="card-body">-->
-                    <!--                                <h5 class="card-title">{{this.ProductName}}</h5>-->
-                    <!--                                <p class="card-text">Loại sản phẩm:  {{this.Classify}}</p>-->
-                    <!--                                <p class="">Giá:  {{number this.Price}} VNĐ</p>-->
-                    <!--                                <div class="card-footer">-->
-                    <!--                                    <form action="detailProduct" method="get">-->
-                    <!--                                        <div class="form-group" style="display: none">-->
-                    <!--                                            <input type="text" name="idSP" value="{{this._id}}" class="form-control">-->
-                    <!--                                        </div>-->
-                    <!--                                        <button type="submit" value="1" name="btn" class="btn btn-primary col-12">Chi-->
-                    <!--                                            tiết-->
-                    <!--                                        </button>-->
-                    <!--                                    </form>-->
-
-                    <!--                                </div>-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-
-
                     <div class="col mb-4">
                         <article style="width: 300px">
                             <section class="imgbox">

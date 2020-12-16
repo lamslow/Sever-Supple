@@ -9,6 +9,54 @@
 </head>
 <body>
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" methods="get"  href="sanpham">Trang chủ</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active mr-1">
+                <div class="btn-group">
+                    <button class="btn btn-outline-success dropdown-toggle" data-display="static" type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">Products
+                    </button>
+                    <form action="sanpham" method="get">
+                        <div class="dropdown-menu dropdown-menu-lg-right">
+                            <button class="dropdown-item" value="supply" name="sm" type="submit">Thực phẩm hỗ trợ</button>
+                            <button class="dropdown-item" value="equipment" name="sm" type="submit">Dụng cụ tập luyện</button>
+                            <button class="dropdown-item" value="clothes" name="sm" type="submit">Quần áo tập luyện</button>
+                        </div>
+                    </form>
+                </div>
+            </li>
+            <li class="nav-item active mr-1">
+                <a class="btn btn-outline-success" href="/qlysanpham">Products Management</a>
+            </li>
+            <li class="nav-item active  mr-1">
+                <a class="btn btn-outline-success" href="/listcoach" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Coach Management
+                </a>
+
+            </li>
+            <li class="nav-item active mr-1">
+                <a class="btn btn-outline-success" href="/qlykhachhang">Customer Management</a>
+            </li>
+            <li class="nav-item active mr-1">
+                <a class="btn btn-outline-success" href="/listAdmin" tabindex="-1" aria-disabled="true">Administrator Management</a>
+            </li>
+            <li class="nav-item active mr-1">
+                <a class="btn btn-outline-success" href="/listOrder" tabindex="-1" aria-disabled="true">Order
+                    Management</a>
+            </li>
+        </ul>
+        <a class="btn btn-outline-success" href="/" tabindex="-1" aria-disabled="true">Đăng xuất</a>
+    </div>
+</nav>
+
+
 <div class="container">
     <div class="container rounded-bottom bg-light ">
         <br> <br> <br>

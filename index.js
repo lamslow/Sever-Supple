@@ -125,23 +125,6 @@ app.get('/', function (request, response) {
     response.render("test", {status: 'none', status2: "none", animate:"animate"});
 });
 
-function formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
-    try {
-        decimalCount = Math.abs(decimalCount);
-        decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
-
-        const negativeSign = amount < 0 ? "-" : "";
-
-        let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
-        let j = (i.length > 3) ? i.length % 3 : 0;
-
-        return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands);
-    } catch (e) {
-        console.log(e)
-    }
-};
-
-
 app.get('/gioithieu', function (request, response) {
     response.render("gioithieu");
 });
@@ -206,6 +189,14 @@ app.post('/createAdmin', async function (request, response) {
         });
     }
 });//done
+
+
+app.get('/signUpAdmin', async function (req, res) {
+    res.render('addAdmin', {
+        btnUD: 'Xong',
+        dsp: 'block'
+    });
+});
 
 app.post('/signUpAdmin', async function (request, response) {
     let update = request.body.update;
@@ -272,6 +263,15 @@ app.get('/updateAdmin', async function (request, response) {
         });
     }
 });//done
+
+app.get('/delAdmin', async function (request, response) {
+    let nAdmin= await Administrator.find({}).lean();
+    response.render('listAdministrator', {
+        data: nAdmin,
+        status: 'none',
+    });
+})
+
 app.post('/delAdmin', async function (request, response) {
     let idAd = request.body.idAd;
     console.log(idAd + "del kh");
@@ -292,6 +292,9 @@ app.post('/delAdmin', async function (request, response) {
         });
     }
 });//dome
+
+
+
 
 app.get('/sanpham', async function (request, response) {
     let sm = request.query.sm;
@@ -331,7 +334,7 @@ app.post('/sanpham', async function (request, response) {
 
     } else {
         let products = await Product.find({}).lean();
-        response.render('sanpham', {data: products});
+        response.render('sanpham', {data: products, userAdmin:userAdmin, status: 'block'});
     }
 });
 
@@ -750,8 +753,6 @@ app.get('/thongke', async function (request, response) {
     let year = new Date().getFullYear();
     let date_ob = new Date(ts);
     let CartInADay;
-    console.log(year + "-" + month + "-0" + dateAfter);
-    console.log(date_ob);
     let allProduct = await Product.find({}).lean();
     let allUser = await User.find({}).lean();
     let allCart = await Cart.find({}).lean();
@@ -793,6 +794,13 @@ app.get('/thongke', async function (request, response) {
             {DateCart: {$gte: year + "-" + month + "-01T02:00:00.00"}},
         ]
     }).lean();
+
+    let total = 0;
+    for(let i = 0; i< allCart.length; i++) {
+        total += allCart[i].TotalPrice;
+    }
+    console.log(total);
+
     response.render("thongke",
         {
             dateNow:date + "-" + month + "-" + year,
@@ -982,9 +990,32 @@ app.post('/confirmCoach', async function (request, response) {
 
 app.get('/listOrder', async function (request, response) {
     let order = await Cart.find({}).lean();
+    console.log(order[0].Cart[0].Name);
     response.render('listOrder', {data: order, status: "none"})
 
 })
+
+
+app.post('/deleteOrder',  (req, res) => {
+    let id = req.body.idOrder;
+    console.log(id);
+    Cart.deleteOne({_id: id}, async function (err) {
+        if (err == null) {
+            let cart = await Cart.find({}).lean();
+            res.render('listOrder', {data:cart,status: "display", textAlert: "Xóa order thành công"});
+        } else {
+            let cart = await Cart.find({}).lean();
+            res.render('listOrder', {data:cart,textAlert: err.message, status: "display"});
+        }
+    });
+});
+
+app.get('/deleteOrder',async function (req, res)  {
+    let order = await Cart.find({}).lean();
+    res.render('listOrder', {data: order, status: "none"})
+});
+
+
 // api for App
 
 app.get('/getUser', async function (request, response) {
