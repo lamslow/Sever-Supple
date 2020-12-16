@@ -799,7 +799,6 @@ app.get('/thongke', async function (request, response) {
     for(let i = 0; i< allCart.length; i++) {
         total += allCart[i].TotalPrice;
     }
-    console.log(total);
 
     response.render("thongke",
         {
@@ -817,6 +816,7 @@ app.get('/thongke', async function (request, response) {
             FeedbackResponded: FeedbackResponded.length + "",
             CartInADay: CartInADay.length + "",
             CartInMonth: CartInMonth.length + "",
+            total:total+"",
         })
 });
 
