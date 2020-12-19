@@ -39,7 +39,20 @@
                 </div>
             </li>
             <li class="nav-item active mr-1">
-                <a class="btn btn-outline-success" href="/qlysanpham">Products Management</a>
+                <div class="btn-group">
+                    <button class="btn btn-outline-success dropdown-toggle" data-display="static" type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">Products Management
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg-right">
+                        <form action="qlysanpham" method="get">
+                            <button class="dropdown-item" type="submit">Sản phẩm còn hàng</button>
+                        </form>
+                        <form action="sold_outsanpham" method="get">
+                            <button class="dropdown-item" type="submit">Sản phẩm hết hàng</button>
+                        </form>
+                    </div>
+                </div>
             </li>
             <li class="nav-item active  mr-1">
                 <a class="btn btn-outline-success" href="/listcoach" id="navbarDropdown" role="button"
@@ -56,14 +69,24 @@
                     Management</a>
             </li>
             <li class="nav-item active mr-1">
-                <a class="btn btn-outline-success" href="/listOrder" tabindex="-1" aria-disabled="true">Order
-                    Management</a>
+                <div class="btn-group">
+                    <button class="btn btn-outline-success dropdown-toggle" data-display="static" type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">Order Management
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-lg-right">
+                        <form action="listOrderDelivered" method="get">
+                            <button class="dropdown-item" type="submit">Đơn hàng đã giao</button>
+                        </form>
+                        <form action="listOrderDelivering" method="get">
+                            <button class="dropdown-item" type="submit">Đơn hàng đang giao</button>
+                        </form>
+                    </div>
+
+                </div>
             </li>
         </ul>
-<!--        <form class="form-inline my-2 my-lg-0">-->
-<!--            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-<!--        </form>-->
         <a class="btn btn-outline-success" href="/" tabindex="-1" aria-disabled="true">Đăng xuất</a>
     </div>
 </nav>
@@ -86,61 +109,76 @@
         </div>
     </div>
     <div class="container">
+
+        <div style="display:{{statusDisplay}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{textAlert}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
         <div class="container rounded-bottom bg-light ">
+
             <br> <br>
+            <h3 style="text-align: center">Đơn hàng đang giao</h3>
             <table class="table container col-sm-12">
                 <thead>
                 <tr>
-<!--                    <th scope="col">_id</th>-->
+                    <!--                    <th scope="col">_id</th>-->
                     <th scope="col">Thời gian</th>
+                    <th scope="col">Tài khoản</th>
                     <th scope="col">Tên người nhận</th>
                     <th scope="col">Sản phẩm<br> Số lượng x Giá</th>
                     <th scope="col">Giá trị</th>
                     <th scope="col">Địa chỉ</th>
                     <th scope="col">Số điện thoại</th>
+                    <th scope="col">Trạng thái</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
-                <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
-                    {{textAlert}}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
                 {{#each data}}
 
                     <tr>
-                        <form action="deleteOrder" method="post">
-                            <td name="row" style="display:none">
-                             <input style="white-space: nowrap; overflow: hidden;
-                                text-overflow: ellipsis; width: 75px;" type="text" class="form-control" name="idOrder" value="{{this._id}}">
-                            </td>
-                            <td name="row" width="150px">{{this.DateCart}}</td>
-                            <td scope="row" width="200px">{{this.Recipients}}</td>
-                            <td scope="row" id="products">
-                                {{#each this.Cart}}
-                                    <p style="width: 150px;">{{Name}} <br><b>{{Quantity}}</b> x <b style="color: red">{{number Price}}
-                                        VND </b></p>
-                                {{/each}}
-                            </td>
-                            <td scope="row" width="150px"><b style="color: red">{{number this.TotalPrice}} VND</b></td>
-                            <td name="row" width="200px">{{this.ReceivingAddress}}</td>
-                            <td name="row">{{this.Phone}}</td>
+                    <form action="doneOrder" method="post">
+                        <td name="row" style="display:none">
+                            <input style="white-space: nowrap; overflow: hidden;
+                                text-overflow: ellipsis; width: 75px;" type="text" class="form-control" name="idOrder"
+                                   value="{{this._id}}">
+                        </td>
+                        <td name="row" width="170px">{{this.DateCart}}</td>
+                        <td scope="row" width="200px">{{this.Username}}</td>
+                        <td scope="row" width="200px">{{this.Recipients}}</td>
+                        <td scope="row" id="products">
+                            {{#each this.Cart}}
+                                <p style="width: 150px;">{{Name}} <br><b>{{Quantity}}</b> x <b
+                                        style="color: red">{{number Price}}
+                                    VND </b></p>
+                            {{/each}}
+                        </td>
+                        <td scope="row" width="250px"><b style="color: red">{{number this.TotalPrice}} VND</b></td>
+                        <td name="row" width="200px">{{this.ReceivingAddress}}</td>
+                        <td name="row">{{this.Phone}}</td>
+                        <td name="row" width="200px" style="color: #00acde; font-weight: bold">{{this.Status}}</td>
+                        <td name="row" style="display:block}" id="btnDoneOrder">
+                            <button type="submit" style="background: green; color: white;">Done
+                            </button>
+                        </td>
 
-                            <td name="row"> <button type="submit" name="del" value="1" style="border: none; background: none"><img
-                                    src="public/delete.png" width="30px" height="30px"></button></td>
-                        </form>
-                    </tr>
 
                 {{/each}}
+
+
+                </form>
+                </tr>
+
+
             </table>
         </div>
     </div>
 
 
 </div>
-
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

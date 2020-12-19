@@ -43,7 +43,20 @@
                     </div>
                 </li>
                 <li class="nav-item active mr-1">
-                    <a class="btn btn-outline-success" href="/qlysanpham">Products Management</a>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-success dropdown-toggle" data-display="static" type="button"
+                                data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">Products Management
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-lg-right">
+                            <form action="qlysanpham" method="get">
+                                <button class="dropdown-item" type="submit">Sản phẩm còn hàng</button>
+                            </form>
+                            <form action="sold_outsanpham" method="get">
+                                <button class="dropdown-item" type="submit">Sản phẩm hết hàng</button>
+                            </form>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item active  mr-1">
                     <a class="btn btn-outline-success" href="/listcoach" id="navbarDropdown" role="button"
@@ -60,14 +73,24 @@
                         Management</a>
                 </li>
                 <li class="nav-item active mr-1">
-                    <a class="btn btn-outline-success" href="/listOrder" tabindex="-1" aria-disabled="true">Order
-                        Management</a>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-success dropdown-toggle" data-display="static" type="button"
+                                data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">Order Management
+                        </button>
+
+                        <div class="dropdown-menu dropdown-menu-lg-right">
+                            <form action="listOrderDelivered" method="get">
+                                <button class="dropdown-item" type="submit">Đơn hàng đã giao</button>
+                            </form>
+                            <form action="listOrderDelivering" method="get">
+                                <button class="dropdown-item" type="submit">Đơn hàng đang giao</button>
+                            </form>
+                        </div>
+
+                    </div>
                 </li>
             </ul>
-<!--            <form class="form-inline my-2 my-lg-0">-->
-<!--                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-<!--            </form>-->
             <a class="btn btn-outline-success" href="/" tabindex="-1" aria-disabled="true">Đăng xuất</a>
         </div>
     </nav>
@@ -109,20 +132,25 @@
             </table>
             <div class="container">
                 <label class="font-weight-bold"></label>
-                <p>- Số lượng khách hàng là nam : <label class="font-weight-bold"> {{BoyUser}}</label> người</p>
-                <p>- Số lượng khách hàng là nữ : <label class="font-weight-bold">{{GirlUser}} </label> người</p>
-                <p>- Số lượng khách hàng đang đợi duyệt để trở thành Huấn luyện viên : <label
+                <p>- Số lượng khách hàng là nam: <label class="font-weight-bold"> {{BoyUser}}</label> người</p>
+                <p>- Số lượng khách hàng là nữ: <label class="font-weight-bold">{{GirlUser}} </label> người</p>
+                <p>- Số lượng khách hàng đang đợi duyệt để trở thành Huấn luyện viên: <label
                         class="font-weight-bold">{{CustomersWaitingApproval}} </label>
                     người</p>
-                <p>- Số lượng khách hàng chưa là Huấn luyện viên : <label
+                <p>- Số lượng khách hàng chưa là Huấn luyện viên: <label
                         class="font-weight-bold">{{CustomersNotCoach}}</label> người</p>
-                <p>- Số lượng phẩn hồi từ khách hàng : <label class="font-weight-bold">{{FeedbackFromCustomers}}</label>
-                    phản hồi  <br> &ensp; • Chưa phản hồi: <b>{{FeedbackNotResponded}}</b> phản hồi<br>  &ensp;  • Đã phản hồi:  <b>{{FeedbackResponded}}</b> phản hồi</p>
-                <p>- Số lượng đơn hàng trong ngày {{dateNow}} : <label class="font-weight-bold">{{CartInADay}}</label> đơn
+                <p>- Số lượng phẩn hồi từ khách hàng: <label class="font-weight-bold">{{FeedbackFromCustomers}}</label> phản hồi<br>&nbsp;• Chưa được trả lời:<b> {{FeedbackNotResponded}}</b> phản hồi <br>&nbsp;• Đã được trả lời: <b>{{FeedbackResponded}}</b> phản hồi
+                    </p>
+                <p>- Số lượng đơn hàng trong ngày {{dateNow}}: <label class="font-weight-bold">{{CartInADay}}</label> đơn
                     hàng</p>
-                <p>- Số lượng đơn hàng trong tháng {{MonthNow}} : <label class="font-weight-bold">{{CartInMonth}} </label>
+                <p>- Số lượng đơn hàng trong tháng {{MonthNow}}: <label class="font-weight-bold">{{CartInMonth}} </label>
                     đơn hàng</p>
-                <p>- Tổng doanh thu : <label class="font-weight-bold" style="color: red">{{number total}} </label> VND</p>
+
+                <p>- Doanh số bán hàng trong ngày  {{dateNow}}: <label class="font-weight-bold"><label style="color: red">{{number TotalInDay}} </label></label>
+                    VNĐ</p>
+
+                <p>- Doanh số bán hàng trong tháng  {{MonthNow}}: <label class="font-weight-bold"><label style="color: red">{{number TotalInMonth}}</label> </label>
+                    VNĐ</p>
             </div>
         </div>
     </div>

@@ -39,7 +39,20 @@
                 </div>
             </li>
             <li class="nav-item active mr-1">
-                <a class="btn btn-outline-success" href="/qlysanpham">Products Management</a>
+                <div class="btn-group">
+                    <button class="btn btn-outline-success dropdown-toggle" data-display="static" type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">Products Management
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg-right">
+                        <form action="qlysanpham" method="get">
+                            <button class="dropdown-item" type="submit">Sản phẩm còn hàng</button>
+                        </form>
+                        <form action="sold_outsanpham" method="get">
+                            <button class="dropdown-item" type="submit">Sản phẩm hết hàng</button>
+                        </form>
+                    </div>
+                </div>
             </li>
             <li class="nav-item active  mr-1">
                 <a class="btn btn-outline-success" href="/listcoach" id="navbarDropdown" role="button"
@@ -56,14 +69,24 @@
                     Management</a>
             </li>
             <li class="nav-item active mr-1">
-                <a class="btn btn-outline-success" href="/listOrder" tabindex="-1" aria-disabled="true">Order
-                    Management</a>
+                <div class="btn-group">
+                    <button class="btn btn-outline-success dropdown-toggle" data-display="static" type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">Order Management
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-lg-right">
+                        <form action="listOrderDelivered" method="get">
+                            <button class="dropdown-item" type="submit">Đơn hàng đã giao</button>
+                        </form>
+                        <form action="listOrderDelivering" method="get">
+                            <button class="dropdown-item" type="submit">Đơn hàng đang giao</button>
+                        </form>
+                    </div>
+
+                </div>
             </li>
         </ul>
-<!--        <form class="form-inline my-2 my-lg-0">-->
-<!--            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-<!--        </form>-->
         <a class="btn btn-outline-success" href="/" tabindex="-1" aria-disabled="true">Đăng xuất</a>
     </div>
 </nav>

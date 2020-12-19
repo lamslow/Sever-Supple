@@ -15,51 +15,44 @@
     <div class="col-sm-10  rounded-bottom bg-light " style="padding-right: 3%">
         <hr>
         <hr>
-        <form action="/updateSPdone" method="post" class=" container col-10" enctype="multipart/form-data">
-            <input type="text" name="nId" value="{{idSP}}" required class="form-control" style="display: none">
+        <form action="/updateSoldSPdone" method="post" class=" container col-10"  enctype="multipart/form-data">
+            <input type="text" name="nIdSoldSPUpdate" value="{{idSP}}" required class="form-control" style="display: none">
             <div class="form-group">
-                <label for="nameSP">Tên sản phẩm</label>
-                <input type="text" class="form-control" value="{{nameSP}}" required name="nameSP">
+                <label for="nNameSoldSPUpdate">Tên sản phẩm</label>
+                <input type="text" class="form-control" value="{{nameSP}}" required name="nNameSoldSPUpdate">
             </div>
             <div class="form-group">
-                <label for="priceSP">Giá sản phẩm</label>
-                <input type="text" class="form-control" value="{{priceSP}}" required name="priceSP">
+                <label for="nPriceSoldSPUpdate">Giá sản phẩm</label>
+                <input type="text" class="form-control" value="{{priceSP}}" required name="nPriceSoldSPUpdate">
             </div>
             <div class="form-group">
-                <label for="exImage">Hình ảnh</label>
-                <input type="file" class="form-control-file" value="{{imageSP}}" required name="exImage">
+                <label for="nImageSoldSPUpdate">Hình ảnh</label>
+                <input type="file" class="form-control-file" value="{{imageSP}}" required name="nImageSoldSPUpdate">
             </div>
             <div class="form-group">
-                <label for="classifySP">Loại sản phẩm</label>
-                <input type="text" class="form-control" value="{{classifySP}}" required name="classifySP">
+                <label for="nClassifySoldSPUpdate">Loại sản phẩm</label>
+                <input type="text" class="form-control" value="{{classifySP}}" required name="nClassifySoldSPUpdate">
             </div>
             <div class="form-group">
-                <label for="descriptionSP">Miêu tả sản phẩm</label>
-                <input type="text" class="form-control" value="{{descriptionSP}}" required name="descriptionSP">
-            </div>
-
-            <div class="form-group">
-                <label for="slSP">Số lượng</label>
-                <input type="text" class="form-control" value="{{slSP}}" required name="slSP">
-            </div>
-            <div class="form-group">
-                <label for="rateSP">Rating</label>
-                <input type="text" class="form-control" value="{{rateSP}}" required name="rateSP">
+                <label for="nDescriptionSoldSPUpdate">Miêu tả sản phẩm</label>
+                <input type="text" class="form-control" value="{{descriptionSP}}" required name="nDescriptionSoldSPUpdate">
             </div>
 
-            <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
-                {{data}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="form-group">
+                <label for="nSlSoldSPUpdate">Số lượng</label>
+                <input type="text" class="form-control" value="{{slSP}}" required name="nSlSoldSPUpdate">
+            </div>
+            <div class="form-group">
+                <label for="nRateSoldSPUpdate">Rating</label>
+                <input type="text" class="form-control" value="{{rateSP}}" required name="nRateSoldSPUpdate">
             </div>
             <div class="row justify-content-center">
                 <div class="col-4">
                     <button type="submit" name="update" value="1"
-                            class="btn btn-outline-dark col-sm-12 ">{{btnUD}}</button>
+                            class="btn btn-outline-dark col-sm-12 ">Cập nhật</button>
                 </div>
                 <div class="col-4">
-                    <a href="qlysanpham" id="cancel" class="btn btn-outline-dark col-sm-12">Hủy
+                    <a href="sold_outsanpham" id="cancel" class="btn btn-outline-dark col-sm-12">Hủy
                     </a>
                 </div>
             </div>
@@ -67,8 +60,8 @@
 
         <br><br><br>
     </div>
-    <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
-        {{data}}
+    <div style="display: {{statusDisplay}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{textAlert}}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>

@@ -10,7 +10,7 @@ const CartSchema = mongoose.Schema({
     Recipients:{type:String},
     ReceivingAddress:{type:String},
     DateCart:{type:Date},
-    TotalPrice:{type:Number}
-
+    TotalPrice:{type:Number},
+    Status:{type:String},
 });
 module.exports = CartSchema;

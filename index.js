@@ -12,6 +12,8 @@ let cartSchema = require('./model/cartSchema');
 let checkCoachSchema = require('./model/checkCoach');
 let notificationSchema = require('./model/NotificationSchema');
 let reportSchema = require('./model/reportSchema');
+let soldoutproductSchema = require('./model/SoldOutProductSchema');
+
 let message = require('firebase-admin')
 let serviceAccount = require("./PT Connect-daca5f65cc4a.json");
 message.initializeApp({
@@ -25,6 +27,9 @@ let Cart = db.model("Cart", cartSchema, 'cart');
 let CheckCoach = db.model("checkCoach", checkCoachSchema, 'checkCoach');
 let Notification = db.model("notification", notificationSchema, 'notification');
 let Report = db.model("report", reportSchema, 'report');
+let SoldoutProduct = db.model("soldOutProducts", soldoutproductSchema, 'soldOutProducts');
+
+
 let body = require('body-parser');
 let multer = require('multer')
 db.connect('mongodb+srv://lamntph07140:GsGdVaP7Sg3XSbcq@cluster0-kylu8.gcp.mongodb.net/databaseAss', {}).then(function (res) {
@@ -85,6 +90,7 @@ let upload = multer({
 })
 
 let file = upload.single('exImage')
+let fileSoldProduct = upload.single('nImageSoldSPUpdate')
 app.post('/upload', function (req, res) {
     file(req, res, function (err) {
 
@@ -118,11 +124,12 @@ app.engine('.hbs', hbs({
     layoutsDir: ''
 }));
 
+
 app.set('view engine', '.hbs');
 app.listen(process.env.PORT || 3002);
 
 app.get('/', function (request, response) {
-    response.render("test", {status: 'none', status2: "none", animate:"animate"});
+    response.render("test", {status: 'none', status2: "none", animate: "animate"});
 });
 
 app.get('/gioithieu', function (request, response) {
@@ -265,7 +272,7 @@ app.get('/updateAdmin', async function (request, response) {
 });//done
 
 app.get('/delAdmin', async function (request, response) {
-    let nAdmin= await Administrator.find({}).lean();
+    let nAdmin = await Administrator.find({}).lean();
     response.render('listAdministrator', {
         data: nAdmin,
         status: 'none',
@@ -294,23 +301,21 @@ app.post('/delAdmin', async function (request, response) {
 });//dome
 
 
-
-
 app.get('/sanpham', async function (request, response) {
     let sm = request.query.sm;
 
     if (sm == "supply") {
         let products = await Product.find({Classify: "supply"}).lean();
-        response.render('sanpham', {data: products});
+        response.render('sanpham', {data: products, title: "Thực phẩm hỗ trợ"});
     } else if (sm == "equipment") {
         let products = await Product.find({Classify: "equipment"}).lean();
-        response.render('sanpham', {data: products});
+        response.render('sanpham', {data: products, title: "Dụng cụ tập luyện"});
     } else if (sm == "clothes") {
         let products = await Product.find({Classify: "clothes"}).lean();
-        response.render('sanpham', {data: products});
+        response.render('sanpham', {data: products, title: "Quần áo tập luyện"});
     } else {
         let products = await Product.find({}).lean();
-        response.render('sanpham', {data: products});
+        response.render('sanpham', {data: products, title: "Tất cả sản phẩm"});
     }
 
 
@@ -322,7 +327,7 @@ app.post('/sanpham', async function (request, response) {
     let sm = request.body.sm;
     let administrator = await Administrator.find({userAdmin: userAdmin, passwordAdmin: passwordAdmin}).lean();   //dk
 
-    if (administrator.length <= 0 && sm==1) {
+    if (administrator.length <= 0 && sm == 1) {
 
         response.render('test', {
             status: 'block',
@@ -334,14 +339,14 @@ app.post('/sanpham', async function (request, response) {
 
     } else {
         let products = await Product.find({}).lean();
-        response.render('sanpham', {data: products, userAdmin:userAdmin, status: 'block'});
+        response.render('sanpham', {data: products, userAdmin: userAdmin, status: 'block', title: "Tất cả sản phẩm"});
     }
 });
 
 
 app.get('/qlysanpham', async function (request, response) {
     let products = await Product.find({}).lean();
-    response.render('qlysanpham', {data: products});
+    response.render('qlysanpham', {data: products, statusDisplay: "none", title: "Sản phẩm còn hàng"});
 });
 
 
@@ -449,32 +454,30 @@ app.get('/updateSPdone', async function (request, response) {
     let nProduct = await Product.find({}).lean();
     response.render('qlysanpham', {
         data: nProduct,
-        status: 'none',
-        textAlert: 'Cập nhật sản phẩm thành công.'
+        statusDisplay: 'none'
     });
 })
 app.post('/updateSPdone', async function (request, response) {
-    let nId = request.body.nId;
-    let nameSP = request.body.nameSP;
-    let priceSP = request.body.priceSP;
-    let exImage = request.body.exImage;
-    let descriptionSP = request.body.descriptionSP;
-    let classifySP = request.body.classifySP;
-    let slSP = request.body.slSP;
-    let rateSP = request.body.rateSP;
+    file(request, response, async function (err) {
+        if (err) {
+            // kiem tra loi co phai la max file ko
+            if (err instanceof multer.MulterError) {
+                response.send('kích thước file lớn hơn 2mb' + response)
+            } else {
+                response.send('' + err)
+            }
 
-    let products = await Product.find({
-        ProductName: nameSP,
-        Price: priceSP,
-        Description: descriptionSP,
-        Quantity: slSP,
-        Classify: classifySP,
-        ImageProduct: exImage,
-        Rating: rateSP
-    }).lean();   //dk
-    if (products.length <= 0) {
-        console.log(nId + "edit sp");
-        let status = await Product.findByIdAndUpdate(nId, {
+        }
+        let nId = request.body.nId;
+        let nameSP = request.body.nameSP;
+        let priceSP = request.body.priceSP;
+        let exImage = request.file.filename;
+        let descriptionSP = request.body.descriptionSP;
+        let classifySP = request.body.classifySP;
+        let slSP = request.body.slSP;
+        let rateSP = request.body.rateSP;
+
+        let products = await Product.find({
             ProductName: nameSP,
             Price: priceSP,
             Description: descriptionSP,
@@ -482,57 +485,273 @@ app.post('/updateSPdone', async function (request, response) {
             Classify: classifySP,
             ImageProduct: exImage,
             Rating: rateSP
-        });
-        let nProduct = await Product.find({}).lean();
-        if (status) {
-            response.render('qlysanpham', {
-                data: nProduct,
-                status: 'block',
-                textAlert: 'Cập nhật sản phẩm thành công.'
+        }).lean();   //dk
+        if (products.length <= 0) {
+            console.log(nId + "edit sp");
+            let status = await Product.findByIdAndUpdate(nId, {
+                ProductName: nameSP,
+                Price: priceSP,
+                Description: descriptionSP,
+                Quantity: slSP,
+                Classify: classifySP,
+                ImageProduct: exImage,
+                Rating: rateSP
             });
+            let nProduct = await Product.find({}).lean();
+            if (status) {
+                response.render('qlysanpham', {
+                    data: nProduct,
+                    statusDisplay: 'block',
+                    textAlert: 'Cập nhật sản phẩm thành công.'
+                });
+            } else {
+                response.render('qlysanpham', {
+                    data: nProduct,
+                    statusDisplay: 'block',
+                    textAlert: 'Cập nhật sản phẩm thất bại.'
+                });
+            }
         } else {
+            let nProduct = await Product.find({}).lean();
             response.render('qlysanpham', {
                 data: nProduct,
-                status: 'block',
-                textAlert: 'Cập nhật sản phẩm thất bại.'
+                statusDisplay: 'block',
+                textAlert: 'Cập nhật sản phẩm thất bại. Sản phẩm cập nhật đã tồn tại.'
             });
         }
-    } else {
-        let nProduct = await Product.find({}).lean();
-        response.render('qlysanpham', {
-            data: nProduct,
-            status: 'block',
-            textAlert: 'Cập nhật sản phẩm thất bại. Sản phẩm cập nhật đã tồn tại.'
-        });
-    }
+    });
 });
+
 app.get('/delsanpham', async function (request, response) {
     let nProduct = await Product.find({}).lean();
     response.render('qlysanpham', {
         data: nProduct,
-        status: 'none',
+        statusDisplay: 'none',
     });
 })
 app.post('/delsanpham', async function (request, response) {
 
     let idSP = request.body.idSP;
-    console.log(idSP + "del Sp");
 
     let status = await Product.findByIdAndDelete(idSP);
     let nProduct = await Product.find({}).lean();
     if (status) {
         response.render('qlysanpham', {
             data: nProduct,
-            status: 'block',
+            statusDisplay: 'block',
             textAlert: 'Xóa sản phẩm thành công.'
         });
     } else {
         response.render('qlysanpham', {
             data: nProduct,
-            status: 'block',
+            statusDisplay: 'block',
             textAlert: 'Xóa sản phẩm thất bại.'
         });
     }
+});
+
+app.post('/delSoldsanpham',(req, res)=> {
+    let idSP = req.body.idSoldSPDel;
+    SoldoutProduct.deleteOne({_id:idSP}, async function (err) {
+        if(err == null) {
+            let soldOutProducts = await SoldoutProduct.find({}).lean();
+            res.render('qlySoldOutSanpham', {data: soldOutProducts, statusDisplay: "block", textAlert: 'Xóa sản phẩm thành công'});
+        } else {
+            let soldOutProducts = await SoldoutProduct.find({}).lean();
+            res.render('qlySoldOutSanpham', {data: soldOutProducts, statusDisplay: "block", textAlert: 'Lỗi server'});
+            console.log(err.message);
+        }
+    });
+});
+
+app.post('/updateSoldsanpham',async (req, res)=> {
+    let idSP = req.body.idSoldSPUpdate;
+    let detailSoldOutProduct = await SoldoutProduct.findById(idSP);
+    res.render('updateSoldsanpham', {
+        idSP: detailSoldOutProduct._id,
+        nameSP: detailSoldOutProduct.ProductName,
+        priceSP: detailSoldOutProduct.Price,
+        imageSP: detailSoldOutProduct.ImageProduct,
+        classifySP: detailSoldOutProduct.Classify,
+        descriptionSP: detailSoldOutProduct.Description,
+        slSP: detailSoldOutProduct.Quantity,
+        rateSP: detailSoldOutProduct.Rating,
+        statusDisplay: "none"
+    });
+});
+
+app.post('/updateSoldSPdone',async function (req, res) {
+    let idSP = req.body.idSoldSPUpdate;
+    let detailSoldOutProduct = await SoldoutProduct.find({_id:idSP});
+    console.log(detailSoldOutProduct);
+    fileSoldProduct(req, res, async function (err) {
+        if (err) {
+            if (err instanceof multer.MulterError) {
+                res.render("updateSoldsanpham", {
+                    textAlert: "Giới hạn 2MB",
+                    nameSP: detailSoldOutProduct.ProductName,
+                    priceSP: detailSoldOutProduct.Price,
+                    imageSP: detailSoldOutProduct.ImageProduct,
+                    classifySP: detailSoldOutProduct.Classify,
+                    descriptionSP: detailSoldOutProduct.Description,
+                    slSP: detailSoldOutProduct.Quantity,
+                    rateSP: detailSoldOutProduct.Rating,
+                    statusDisplay: "block"});
+            } else {
+                res.render("updateSoldsanpham", {textAlert: err.message,idSP: detailSoldOutProduct._id,
+                    nameSP: detailSoldOutProduct.ProductName,
+                    priceSP: detailSoldOutProduct.Price,
+                    imageSP: detailSoldOutProduct.ImageProduct,
+                    classifySP: detailSoldOutProduct.Classify,
+                    descriptionSP: detailSoldOutProduct.Description,
+                    slSP: detailSoldOutProduct.Quantity,
+                    rateSP: detailSoldOutProduct.Rating,
+                    statusDisplay: "block"});
+            }
+        }
+        let idSP = req.body.nIdSoldSPUpdate;
+        let nNameSoldSPUpdate = req.body.nNameSoldSPUpdate;
+        let nPriceSoldSPUpdate = req.body.nPriceSoldSPUpdate;
+        let nImageSoldSPUpdate = req.file.filename;
+        console.log(req.file.filename);
+        let nClassifySoldSPUpdate = req.body.nClassifySoldSPUpdate;
+        let nDescriptionSoldSPUpdate = req.body.nDescriptionSoldSPUpdate;
+        let nSlSoldSPUpdate = req.body.nSlSoldSPUpdate;
+        let nRateSoldSPUpdate = req.body.nRateSoldSPUpdate;
+        SoldoutProduct.updateOne({_id: idSP}, {
+                ProductName: nNameSoldSPUpdate,
+                Price: nPriceSoldSPUpdate,
+                Description: nDescriptionSoldSPUpdate,
+                Quantity: nSlSoldSPUpdate,
+                Classify: nClassifySoldSPUpdate,
+                ImageProduct: nImageSoldSPUpdate,
+                Rating: nRateSoldSPUpdate,
+            }, async function (err) {
+                if (err == null) {
+                    let soldOutProducts = await SoldoutProduct.find({}).lean();
+                    res.render('qlySoldOutSanpham', {
+                        data: soldOutProducts,
+                        statusDisplay: "block",
+                        textAlert: "Cập nhật thành công"
+                    });
+                } else {
+                    let soldOutProducts = await SoldoutProduct.find({}).lean();
+                    res.render('qlySoldOutSanpham', {
+                        data: soldOutProducts,
+                        statusDisplay: "block",
+                        textAlert: "Lỗi Server"
+                    });
+                    console.log(err.message);
+                }
+            }
+        );
+    });
+});
+
+app.get('/updateSoldSPdone', async function (req, res) {
+    let soldOutProducts = await SoldoutProduct.find({}).lean();
+    res.render('qlySoldOutSanpham', {data: soldOutProducts, statusDisplay: "none"});
+});
+
+
+app.get('/delSoldsanpham', async function (req, res) {
+    let soldOutProducts = await SoldoutProduct.find({}).lean();
+    res.render('qlySoldOutSanpham', {data: soldOutProducts, statusDisplay: "none"});
+});
+
+app.get('/updateSoldsanpham', async function (req, res) {
+    let soldOutProducts = await SoldoutProduct.find({}).lean();
+    res.render('qlySoldOutSanpham', {data: soldOutProducts, statusDisplay: "none"});
+});
+
+app.post('/sold_outsanpham', (req, res) => {
+    let idSP = req.body.idSoldSP;
+    let nameSoldSP = req.body.nameSoldSP;
+    let priceSoldSP = req.body.priceSoldSP;
+    let descriptionSoldSP = req.body.descriptionSoldSP;
+    let quantitySoldSP = req.body.quantitySoldSP;
+    let classifySoldSP = req.body.classifySoldSP;
+    let imageSoldSP = req.body.imageSoldSP;
+    let ratingSoldSP = req.body.ratingSoldSP;
+    SoldoutProduct({
+        ProductName: nameSoldSP,
+        Price: priceSoldSP,
+        Description: descriptionSoldSP,
+        Quantity: quantitySoldSP,
+        Classify: classifySoldSP,
+        ImageProduct: imageSoldSP,
+        Rating: ratingSoldSP,
+    }).save(async function (err){
+        if (err == null) {
+            Product.deleteOne({_id: idSP}, async function (err) {
+                if(err == null) {
+                    let soldOutProducts = await SoldoutProduct.find({}).lean();
+                    res.render('qlySoldOutSanpham', {data: soldOutProducts, statusDisplay: "block", textAlert: "Sản phẩm "+nameSoldSP+" đã hết"});
+                } else {
+                    let products = await Product.find({}).lean();
+                    res.render('qlysanpham', {data: products, statusDisplay: "block", textAlert: "Lỗi Server"});
+                    console.log(err.message);
+                }
+            });
+        } else {
+            let products = await Product.find({}).lean();
+            res.render('qlysanpham', {data: products, statusDisplay: "block", textAlert: "Lỗi Server"});
+            console.log(err.message);
+        }
+    });
+});
+
+app.post('/backToSellsanpham', (req, res) => {
+    let idSP = req.body.idBTSSP;
+    let nameBTSSP = req.body.nameBTSSP;
+    let priceBTSSP = req.body.priceBTSSP;
+    let descriptionBTSSP = req.body.descriptionBTSSP;
+    let quantityBTSSP = req.body.quantityBTSSP;
+    let classifyBTSSP = req.body.classifyBTSSP;
+    let imageBTSSP = req.body.imageBTSSP;
+    let ratingBTSSP = req.body.ratingBTSSP;
+    Product({
+        ProductName: nameBTSSP,
+        Price: priceBTSSP,
+        Description: descriptionBTSSP,
+        Quantity: quantityBTSSP,
+        Classify: classifyBTSSP,
+        ImageProduct: imageBTSSP,
+        Rating: ratingBTSSP,
+    }).save(async function (err){
+        if (err == null) {
+            SoldoutProduct.deleteOne({_id: idSP}, async function (err) {
+                if(err == null) {
+                    let products = await Product.find({}).lean();
+                    res.render('qlysanpham', {data: products, statusDisplay: "block", textAlert: "Sản phẩm "+nameBTSSP+" được bán trở lại"});
+                } else {
+                    let soldOutProducts = await SoldoutProduct.find({}).lean();
+                    res.render('qlySoldOutSanpham', {data: soldOutProducts, statusDisplay: "block", textAlert: "Lỗi Server"});
+                    console.log(err.message);
+                }
+            });
+        } else {
+            let soldOutProducts = await SoldoutProduct.find({}).lean();
+            res.render('qlySoldOutSanpham', {data: soldOutProducts, statusDisplay: "block", textAlert: "Lỗi Server"});
+            console.log(err.message);
+        }
+    });
+});
+
+
+app.get('/updatesanpham',async (req, res) => {
+    let products = await Product.find({}).lean();
+    res.render('qlysanpham', {data: products, statusDisplay: "none"});;
+});
+
+app.get('/sold_outsanpham',async (req, res) => {
+    let soldOutProducts = await SoldoutProduct.find({}).lean();
+    res.render('qlySoldOutSanpham', {data: soldOutProducts, statusDisplay: "none"});
+});
+
+app.get('/backToSellsanpham',async (req, res) => {
+    let products = await Product.find({}).lean();
+    res.render('qlysanpham', {data: products, statusDisplay: "none"});
 });
 
 app.get('/qlykhachhang', async function (request, response) {
@@ -753,6 +972,8 @@ app.get('/thongke', async function (request, response) {
     let year = new Date().getFullYear();
     let date_ob = new Date(ts);
     let CartInADay;
+    console.log(year + "-" + month + "-0" + dateAfter);
+    console.log(date_ob);
     let allProduct = await Product.find({}).lean();
     let allUser = await User.find({}).lean();
     let allCart = await Cart.find({}).lean();
@@ -764,29 +985,28 @@ app.get('/thongke', async function (request, response) {
     let FeedbackFromCustomers = await Report.find({}).lean();
     let FeedbackNotResponded = await Report.find({Status: "No Feedback"}).lean();
     let FeedbackResponded = await Report.find({Status: "Feedbacked"}).lean();
-    if (date<9){
-         CartInADay = await Cart.find({
+    if (date < 9) {
+        CartInADay = await Cart.find({
             $and: [
                 {DateCart: {$lte: year + "-" + month + "-0" + dateAfter + "T04:00:00.00"}},
                 {DateCart: {$gte: year + "-" + month + "-0" + date + "T04:00:00.00"}},
             ]
         }).lean();
-    }else if (date==9){
-         CartInADay = await Cart.find({
+    } else if (date == 9) {
+        CartInADay = await Cart.find({
             $and: [
                 {DateCart: {$lte: year + "-" + month + "-" + dateAfter + "T04:00:00.00"}},
                 {DateCart: {$gte: year + "-" + month + "-0" + date + "T04:00:00.00"}},
             ]
         }).lean();
     } else {
-         CartInADay = await Cart.find({
+        CartInADay = await Cart.find({
             $and: [
                 {DateCart: {$lte: year + "-" + month + "-" + dateAfter + "T04:00:00.00"}},
                 {DateCart: {$gte: year + "-" + month + "-" + date + "T04:00:00.00"}},
             ]
         }).lean();
     }
-
 
     let CartInMonth = await Cart.find({
         $and: [
@@ -795,14 +1015,19 @@ app.get('/thongke', async function (request, response) {
         ]
     }).lean();
 
-    let total = 0;
-    for(let i = 0; i< allCart.length; i++) {
-        total += allCart[i].TotalPrice;
+    let TotalInDay = 0;
+    for (let i = 0; i < CartInADay.length; i++) {
+        TotalInDay += CartInADay[i].TotalPrice
+    }
+    let TotalInMonth = 0;
+    for (let i = 0; i < CartInMonth.length; i++) {
+        TotalInMonth += CartInMonth[i].TotalPrice
     }
 
     response.render("thongke",
         {
-            dateNow:date + "-" + month + "-" + year,
+            dateNow: date + "-" + month + "-" + year,
+            MonthNow: month,
             allProduct: allProduct.length + "",
             allUser: allUser.length + "",
             allCart: allCart.length + "",
@@ -816,8 +1041,9 @@ app.get('/thongke', async function (request, response) {
             FeedbackResponded: FeedbackResponded.length + "",
             CartInADay: CartInADay.length + "",
             CartInMonth: CartInMonth.length + "",
-            total:total+"",
-        })
+            TotalInDay: TotalInDay + "",
+            TotalInMonth: TotalInMonth + ""
+        });
 });
 
 app.get('/quantriHLV', async function (request, response) {
@@ -990,30 +1216,81 @@ app.post('/confirmCoach', async function (request, response) {
 
 app.get('/listOrder', async function (request, response) {
     let order = await Cart.find({}).lean();
-    console.log(order[0].Cart[0].Name);
-    response.render('listOrder', {data: order, status: "none"})
+    response.render('listOrder', {data: order, statusDisplay: "none"})
+})
 
+app.get('/listOrderDelivering', async function (request, response) {
+    let order = await Cart.find({Status: "Đang giao"}).lean();
+    response.render('listOrder', {data: order, statusDisplay: "none"})
+})
+
+app.get('/listOrderDelivered', async function (request, response) {
+    let order = await Cart.find({Status: "Đã giao"}).lean();
+    response.render('listOrderDelivered', {data: order, statusDisplay: "none"})
+})
+
+app.post('/doneOrder', (req, res) => {
+    let id = req.body.idOrder;
+    Cart.updateOne({_id: id}, {
+            Status: "Đã giao"
+        }, async function (err) {
+            if (err == null) {
+                let order = await Cart.find({Status: "Đã giao"}).lean();
+                res.render('listOrderDelivered', {data:order, textAlert: "Set trạng thái đơn hàng thành công"});
+            } else {
+                let order = await Cart.find({Status: "Đang giao"}).lean();
+                res.render('listOrder', {data: order, statusDisplay: "block", textAlert: "Lỗi Server"})
+                console.log(err.message);
+            }
+        }
+    )
+});
+
+app.post('/notDoneOrderYet', (req, res) => {
+    let id = req.body.idOrder;
+    Cart.updateOne({_id: id}, {
+            Status: "Đang giao"
+        }, async function (err) {
+            if (err == null) {
+                let order = await Cart.find({Status: "Đang giao"}).lean();
+                res.render('listOrder', {data:order, textAlert: "Set trạng thái đơn hàng thành công"});
+            } else {
+                let order = await Cart.find({Status: "Đã giao"}).lean();
+                res.render('listOrderDelivered', {data: order, statusDisplay: "block", textAlert: "Lỗi Server"})
+                console.log(err.message);
+            }
+        }
+    )
+});
+
+app.get('/notDoneOrderYet', async (req, res) => {
+    let order = await Cart.find({Status: "Đang giao"}).lean();
+    res.render('listOrder', {data:order, statusDisplay: "none"});
+})
+
+app.get('/doneOrder', async (req, res) => {
+    let order = await Cart.find({Status: "Đã giao"}).lean();
+    res.render('listOrderDelivered', {data:order, statusDisplay: "none"});
 })
 
 
-app.post('/deleteOrder',  (req, res) => {
-    let id = req.body.idOrder;
-    console.log(id);
-    Cart.deleteOne({_id: id}, async function (err) {
-        if (err == null) {
-            let cart = await Cart.find({}).lean();
-            res.render('listOrder', {data:cart,status: "display", textAlert: "Xóa order thành công"});
-        } else {
-            let cart = await Cart.find({}).lean();
-            res.render('listOrder', {data:cart,textAlert: err.message, status: "display"});
-        }
-    });
-});
+// app.post('/deleteOrder',  (req, res) => {
+//     let id = req.body.idOrder;
+//     Cart.deleteOne({_id: id}, async function (err) {
+//         if (err == null) {
+//             let cart = await Cart.find({}).lean();
+//             res.render('listOrder', {data:cart,status: "display", textAlert: "Xóa order thành công"});
+//         } else {
+//             let cart = await Cart.find({}).lean();
+//             res.render('listOrder', {data:cart,textAlert: err.message, status: "display"});
+//         }
+//     });
+// });
 
-app.get('/deleteOrder',async function (req, res)  {
-    let order = await Cart.find({}).lean();
-    res.render('listOrder', {data: order, status: "none"})
-});
+// app.get('/deleteOrder', async function (req, res) {
+//     let order = await Cart.find({}).lean();
+//     res.render('listOrder', {data: order, status: "none"})
+// });
 
 
 // api for App
@@ -1178,16 +1455,28 @@ app.get('/getCart', async function (request, response) {
     response.send(cart);
 });
 
+app.get('/getDeliveringCart', async function (request, response) {
+    let username = request.query.Username;
+    let cart = await Cart.find({Username: username, Status: "Đang giao"}).lean();
+    response.send(cart);
+});
+
+app.get('/getDeliveredCart', async function (request, response) {
+    let username = request.query.Username;
+    let cart = await Cart.find({Username: username, Status: "Đã giao"}).lean();
+    response.send(cart);
+});
+
+
 app.post('/upCart', async function (request, response) {
     let username = request.body.Username;
-    console.log(username);
     let cart = request.body.Cart;
     let phone = request.body.Phone;
-    console.log(cart);
     let dateCart = request.body.DateCart;
     let recipients = request.body.Recipients;
     let receivingAddress = request.body.ReceivingAddress;
     let totalPrice = request.body.TotalPrice;
+    let statuss = request.body.Status;
     let newCart = new Cart({
         Username: username,
         Cart: cart,
@@ -1196,6 +1485,7 @@ app.post('/upCart', async function (request, response) {
         ReceivingAddress: receivingAddress,
         DateCart: dateCart,
         TotalPrice: totalPrice,
+        Status: statuss
     });
     let status = newCart.save();
     if (status) {

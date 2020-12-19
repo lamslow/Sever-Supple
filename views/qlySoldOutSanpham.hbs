@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
-    <title>Customer</title>
+    <title>Products</title>
 </head>
 <body>
 
@@ -108,88 +108,94 @@
         </div>
     </div>
     <div class="container">
-        <form action="signUpkhachhang" method="post">
+        <form action="upsanpham" method="get">
             <div class="container">
                 <div class="row justify-content-md-center row-cols-4">
-
-                    <button type="submit" class=" btn btn-success">Thêm Khách Hàng</button>
-
+                    <button type="submit" class=" btn btn-success">Thêm Sản Phẩm</button>
                 </div>
             </div>
         </form>
         <div class="container rounded-bottom bg-light ">
+            <div style="display:{{statusDisplay}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{textAlert}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
             <br> <br>
+            <h3 style="text-align: center">Sản phẩm hết hàng</h3>
             <table class="table container col-12">
                 <thead>
                 <tr>
-                    <th scope="col">Username</th>
-                    <th scope="col">Password</th>
-                    <th scope="col">Fullname</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">Email</th>
+                    <th scope="col"></th>
+                    <th scope="col">_id</th>
+                    <th scope="col">Tên sản phẩm</th>
+                    <th scope="col">Giá</th>
+                    <th scope="col">Ảnh</th>
+                    <th scope="col">Loại SP</th>
                     <th scope="col">Thao tác</th>
                 </tr>
                 </thead>
                 <tbody>
-                <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
-                    {{textAlert}}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
                 {{#each data}}
                     <tr>
-                        <td scope="row" name="user">{{this.Username}}</td>
-                        <td>{{this.Password}}</td>
-                        <td>{{this.Fullname}}</td>
-                        <td>{{this.Phone}}</td>
-                        <td>{{this.Email}}</td>
                         <td>
-                            <div class="row">
-                                <div class="col-sm-auto">
-                                    <form action="/signUpkhachhang" method="post">
-                                        <div class="form-group" style="display: none">
-                                            <input type="text" name="idKH" value="{{this._id}}" class="form-control">
-                                            <input type="text" name="userKH" value="{{this.Username}}"
-                                                   class="form-control">
-                                            <input type="text" name="passKH" value="{{this.Password}}"
-                                                   class="form-control">
-                                            <input type="text" name="PhoneKH" value="{{this.Phone}}"
-                                                   class="form-control">
-                                            <input type="text" name="EmailKH" value="{{this.Email}}"
-                                                   class="form-control">
-                                            <input type="text" name="AddressKH" value="{{this.Address}}"
-                                                   class="form-control">
-                                            <input type="text" name="FullnameKH" value="{{this.Fullname}}"
-                                                   class="form-control">
-                                        </div>
+                        <form action="backToSellsanpham" method="post">
+                            <div class="form-group" style="display: none">
+                                <input type="text" name="idBTSSP" value="{{this._id}}" class="form-control">
+                                <input type="text" name="nameBTSSP" value="{{this.ProductName}}" class="form-control">
+                                <input type="text" name="priceBTSSP" value="{{this.Price}}" class="form-control">
+                                <input type="text" name="descriptionBTSSP" value="{{this.Description}}" class="form-control">
+                                <input type="text" name="quantityBTSSP" value="{{this.Quantity}}" class="form-control">
+                                <input type="text" name="classifyBTSSP" value="{{this.Classify}}" class="form-control">
+                                <input type="text" name="imageBTSSP" value="{{this.ImageProduct}}" class="form-control">
+                                <input type="text" name="ratingBTSSP" value="{{this.Rating}}" class="form-control">
+                            </div>
+                            <button type="submit" name="backToSell" value="1"
+                                    style="border: none; background: none; margin-left: 15px"><img
+                                    src="public/package.png" width="40" height="40"></button>
+                        </form>
+                        </td>
+                        <td scope="row">{{this._id}}</td>
+                        <td>{{this.ProductName}}</td>
+                        <td>{{this.Price}}</td>
+                        <td style="text-align: center"><img src="public/{{this.ImageProduct}}" width="100" height="75"><br>{{this.ImageProduct}}</td>
+                        <td>{{this.Classify}}</td>
+                        <td>
+                            <div style="text-align: center;  display: flex;
+                        justify-content: center;">
 
-                                        <button type="submit" name="update" value="2" class="btn btn-info">Sửa</button>
+                                <form action="/updateSoldsanpham" method="post">
+                                    <div class="form-group" style="display: none">
+                                        <input type="text" name="idSoldSPUpdate" value="{{this._id}}" class="form-control">
+                                    </div>
 
-                                    </form>
-                                </div>
-                                <div class="col-sm-auto">
-                                    <form action="delKH" method="post">
-                                        <div class="form-group" style="display: none">
-                                            <input type="text" name="idKH" value="{{this._id}}" class="form-control">
-                                            <input type="text" name="userKH" value="{{this.Username}}"
-                                                   class="form-control">
-                                            <input type="text" name="passKH" value="{{this.Password}}"
-                                                   class="form-control">
-                                        </div>
-                                        <button type="submit" name="del" value="1" class="btn btn-secondary">Xóa
-                                        </button>
-                                    </form>
-                                </div>
+                                    <button type="submit" name="update" value="1"
+                                            style="border: none; background: none"><img src="public/edit.png" width="20"
+                                                                                        height="20"></button>
+
+                                </form>
+                                <form action="delSoldsanpham" method="post">
+                                    <div class="form-group" style="display: none">
+                                        <input type="text" name="idSoldSPDel" value="{{this._id}}" class="form-control">
+                                    </div>
+                                    <button type="submit" name="del" value="1"
+                                            style="border: none; background: none; margin-left: 15px"><img
+                                            src="public/delete.png" width="20" height="20"></button>
+                                </form>
+                                <br>
+
                             </div>
                         </td>
                     </tr>
                 {{/each}}
+                </tbody>
             </table>
-
         </div>
     </div>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
