@@ -1024,6 +1024,12 @@ app.get('/thongke', async function (request, response) {
         TotalInMonth += CartInMonth[i].TotalPrice
     }
 
+    let cart = await Cart.find({}).lean();
+    let allTotal = 0;
+    for(let i = 0; i< cart.length; i++) {
+        allTotal += cart[i].TotalPrice;
+    }
+
     response.render("thongke",
         {
             dateNow: date + "-" + month + "-" + year,
@@ -1042,7 +1048,8 @@ app.get('/thongke', async function (request, response) {
             CartInADay: CartInADay.length + "",
             CartInMonth: CartInMonth.length + "",
             TotalInDay: TotalInDay + "",
-            TotalInMonth: TotalInMonth + ""
+            TotalInMonth: TotalInMonth + "",
+            AllTotal: allTotal +""
         });
 });
 

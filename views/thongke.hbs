@@ -151,10 +151,19 @@
 
                 <p>- Doanh số bán hàng trong tháng  {{MonthNow}}: <label class="font-weight-bold"><label style="color: red">{{number TotalInMonth}}</label> </label>
                     VNĐ</p>
+
+                <p>- Tổng doanh thu: <label class="font-weight-bold"><label style="color: red">{{number AllTotal}}</label> </label>
+                    VNĐ</p>
             </div>
         </div>
     </div>
 </div>
+<script>
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
