@@ -1141,7 +1141,15 @@ app.post('/confirmCoach', async function (request, response) {
     let rating = request.body.rating;
     let token = request.body.tokenCoach;
     let addressCoach = request.body.addressCoach;
-    console.log(addressCoach + "")
+    let detailDescription = request.body.detailDescription;
+    console.log(detailDescription + "")
+    let payload1 = {
+        notification: {
+            title: title,
+            body: detailDescription,
+        }
+
+    };
     if (btn == "confirm") {
         let stt = await User.findByIdAndUpdate(_id, {
             ImageProfile: imgCoach,
@@ -1157,7 +1165,8 @@ app.post('/confirmCoach', async function (request, response) {
         let ts = Date.now();
 
         let date_ob = new Date(ts);
-        message.messaging().sendToDevice(token, payload, option)
+
+        message.messaging().sendToDevice(token, payload1, option)
             .then(function (response) {
 
             })
@@ -1168,7 +1177,7 @@ app.post('/confirmCoach', async function (request, response) {
         let newNoti = new Notification({
             Username: usernameCoach,
             Title: title,
-            Description: bodyNotification,
+            Description: detailDescription,
             DateRecieve: date_ob
         });
         await newNoti.save();
@@ -1191,7 +1200,7 @@ app.post('/confirmCoach', async function (request, response) {
         let ts = Date.now();
 
         let date_ob = new Date(ts);
-        message.messaging().sendToDevice(token, payloadCancel, option)
+        message.messaging().sendToDevice(token, payload1, option)
             .then(function (response) {
 
             })
@@ -1202,7 +1211,7 @@ app.post('/confirmCoach', async function (request, response) {
         let newNoti = new Notification({
             Username: usernameCoach,
             Title: title,
-            Description: bodyNotificationCacel,
+            Description: detailDescription,
             DateRecieve: date_ob
         });
         await newNoti.save();
@@ -1220,7 +1229,6 @@ app.post('/confirmCoach', async function (request, response) {
 
 
 });
-
 app.get('/listOrder', async function (request, response) {
     let order = await Cart.find({}).lean();
     response.render('listOrder', {data: order, statusDisplay: "none"})
@@ -1454,6 +1462,11 @@ app.get('/myProduct', async function (request, response) {
 app.get('/allProduct', async function (request, response) {
     let products = await Product.find({}).lean();
     response.send(products);
+});
+
+app.get('/allSoldProduct', async function (request, response) {
+    let soldProducts = await SoldoutProduct.find({}).lean();
+    response.send(soldProducts);
 });
 
 app.get('/getCart', async function (request, response) {
