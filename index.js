@@ -1529,7 +1529,7 @@ app.post('/checkInforCoach', async function (request, response) {
         if (err) {
             // kiem tra loi co phai la max file ko
             if (err instanceof multer.MulterError) {
-                response.send('kích thước file lớn hơn 2mb' + response)
+                response.send('kích thước file lớn hơn 2mb')
             } else {
                 response.send('' + err)
             }
